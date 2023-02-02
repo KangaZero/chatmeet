@@ -33,7 +33,7 @@ const handleSubmit = async () => {
                 onChange={(e) => 
                 setUsername(e.target.value)} 
                 value={username} />
-                <Button width={400} onClick={handleSubmit} >Save</Button>
+                <Button width="100%" onClick={handleSubmit} >Save</Button>
                 </>
             ) : (
                 <>
