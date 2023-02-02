@@ -1,6 +1,7 @@
 
 import { Box } from '@chakra-ui/react';
 import type { NextPage, NextPageContext } from 'next';
+import Navbar from 'next/navigation';
 import { getSession, useSession } from 'next-auth/react';
 
 import Chat from '../components/Chat/Chat';
@@ -21,30 +22,10 @@ const Home: NextPage = () => {
 
   return (
     <Box border="1px solid black" background="yellow.200" height={100}>
+
       {session?.user?.username ? <Chat /> : <Auth session={session} reloadSession={reloadSession}/>}
 
-      {/* <div>
-        {data?.user ?
-          <button 
-          onClick={()  => signOut()}
-          > 
-            Sign Out 
-          </button>
-        :
-          <button 
-          onClick={()  => signIn('google')}
-          > 
-            Sign In 
-          </button>
-}
-          <div>
-            <h1>{data?.user?.name}</h1>
-            <img
-              src={data?.user?.image as string}
-              alt={data?.user?.name as string}
-              />
-          </div>
-      </div> */}
+    
 
     </Box>
 
