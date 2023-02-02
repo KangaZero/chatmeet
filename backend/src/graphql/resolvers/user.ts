@@ -5,7 +5,7 @@ const resolvers = {
     Mutation: {
         createUsername: () => {}
     },
-    Subscription: {}
-}
+    // Subscription: {}
+};
 
 export default resolvers;
