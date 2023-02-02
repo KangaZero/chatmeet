@@ -8,7 +8,7 @@ const Home: NextPage = () => {
 
   const { data } = useSession();
 
-  console.log('daataa', data);
+  console.log('daataa', data?.user);
 
 
   return (
