@@ -1,15 +1,24 @@
 import { ApolloServer } from 'apollo-server-express';
 import { ApolloServerPluginDrainHttpServer, ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
+import { makeExecutionableSchema } from '@graphql-tools/schema';
 import express from 'express';
 import http from 'http';
 
-async function main(typeDefs, resolvers) {
+import typeDefs from './graphql/typeDefs';
+import resolvers from './graphql/resolvers';
+
+async function main() {
   // Required logic for integrating with Express
   const app = express();
   // Our httpServer handles incoming requests to our Express app.
   // Below, we tell Apollo Server to "drain" this httpServer,
   // enabling our servers to shut down gracefully.
   const httpServer = http.createServer(app);
+
+  const schema = makeExecutionableSchema(
+    typeDefs,
+    resolvers
+  )
 
   // Same ApolloServer initialization as before, plus the drain plugin
   // for our httpServer.
