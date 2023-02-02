@@ -15,7 +15,8 @@ const Home: NextPage = () => {
   console.log('daataa', session?.user);
 
   const reloadSession = () => {
-
+    const event = new Event('visibilitychange');
+    document.dispatchEvent(event);
   };
 
   return (
