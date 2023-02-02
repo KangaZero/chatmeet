@@ -27,6 +27,8 @@ const [createUsername, { data, loading, error }] = useMutation<
 const handleSubmit = async () => {
     try {
         await createUsername({ variables : { username }}) 
+
+        console.log('createUsername', data)
     } catch (err) {
         console.error(err)
     }

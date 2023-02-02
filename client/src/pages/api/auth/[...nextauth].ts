@@ -11,5 +11,12 @@ export default NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
   ],
-  secret: process.env.NEXTAUTH_SECRET
+  secret: process.env.NEXTAUTH_SECRET,
+  callbacks: {
+    async session({ session, token, user }) {
+      //  User now has the default session props as well the backend added props eg. username
+      return {...session, user: {...session.user, ...user}} 
+    }
+  }
+
 })
