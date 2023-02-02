@@ -5,9 +5,11 @@ import express from 'express';
 import http from 'http';
 import * as dotenv from 'dotenv';
 import { getSession } from 'next-auth/react';
+import { PrismaClient } from '@prisma/client';
 
 import typeDefs from './graphql/typeDefs';
 import resolvers from './graphql/resolvers';
+import { GraphQLContext, Session } from './util/types';
 
 async function main() {
   dotenv.config();
@@ -28,16 +30,18 @@ async function main() {
     credentials: true,
   }
 
+  const prisma = new PrismaClient();
+
   // Same ApolloServer initialization as before, plus the drain plugin
   // for our httpServer.
   const server = new ApolloServer({
     schema,
     csrfPrevention: true,
     cache: 'bounded',
-    context: async ({req, res}) => {
-        const session = await getSession({ req });
-        console.log('context sess', {session})
-        return session 
+    context: async ({req, res}): Promise<GraphQLContext> => {
+        const session = await getSession({ req }) as Session;
+        // console.log('context sess', {session})
+        return { session, prisma };
     },
     plugins: [
         ApolloServerPluginDrainHttpServer({ httpServer }), 
