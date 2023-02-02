@@ -1,18 +1,28 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-import type { NextPage } from 'next'
-import { signIn, signOut, useSession } from 'next-auth/react';
+
+import { Box } from '@chakra-ui/react';
+import type { NextPage, NextPageContext } from 'next';
+import { getSession, useSession } from 'next-auth/react';
+
+import Chat from '../components/Chat/Chat';
+import Auth from '../components/Auth/Auth';
+
+import { Session } from 'next-auth';
 
 const Home: NextPage = () => {
 
-  const { data } = useSession();
+  const { data : session } = useSession();
 
-  console.log('daataa', data?.user);
+  console.log('daataa', session?.user);
 
+  const reloadSession = () => {
+
+  };
 
   return (
-      <div>
+    <Box border="1px solid black" background="yellow.200" height={100}>
+      {session?.user?.username ? <Chat /> : <Auth session={session} reloadSession={reloadSession}/>}
+
+      {/* <div>
         {data?.user ?
           <button 
           onClick={()  => signOut()}
@@ -33,8 +43,22 @@ const Home: NextPage = () => {
               alt={data?.user?.name as string}
               />
           </div>
-      </div>
+      </div> */}
+
+    </Box>
+
   )
+}
+
+// To avoid sign in to show up on first glance
+export async function getServerSideProps(context: NextPageContext) {
+  const session = await getSession(context);
+
+  return {
+    props: {
+      session,
+    }
+  }
 }
 
 export default Home;
