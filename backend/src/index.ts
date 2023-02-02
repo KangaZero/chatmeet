@@ -3,12 +3,14 @@ import { ApolloServerPluginDrainHttpServer, ApolloServerPluginLandingPageLocalDe
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import express from 'express';
 import http from 'http';
+import * as dotenv from 'dotenv';
+import { getSession } from 'next-auth/react';
 
 import typeDefs from './graphql/typeDefs';
 import resolvers from './graphql/resolvers';
 
 async function main() {
-  // Required logic for integrating with Express
+  dotenv.config();
   const app = express();
   // Our httpServer handles incoming requests to our Express app.
   // Below, we tell Apollo Server to "drain" this httpServer,
@@ -20,12 +22,23 @@ async function main() {
     resolvers}
   )
 
+  const corsOption = {
+    origin: process.env.CLIENT_ORIGIN,
+    // To allow session to pass on
+    credentials: true,
+  }
+
   // Same ApolloServer initialization as before, plus the drain plugin
   // for our httpServer.
   const server = new ApolloServer({
     schema,
     csrfPrevention: true,
     cache: 'bounded',
+    context: async ({req, res}) => {
+        const session = await getSession({ req });
+        console.log('context sess', {session})
+        return session 
+    },
     plugins: [
         ApolloServerPluginDrainHttpServer({ httpServer }), 
         ApolloServerPluginLandingPageLocalDefault({ embed: true })
@@ -35,12 +48,7 @@ async function main() {
   // More required logic for integrating with Express
   await server.start();
   server.applyMiddleware({
-    app,
-
-    // By default, apollo-server hosts its GraphQL endpoint at the
-    // server root. However, *other* Apollo Server packages host it at
-    // /graphql. Optionally provide this to match apollo-server.
-    path: '/',
+    app, cors: corsOption
   });
 
   // Modified server startup
