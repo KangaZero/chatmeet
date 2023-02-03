@@ -47,7 +47,8 @@ export default function Navbar() {
     <>
       <Box bg={useColorModeValue('gray.200', 'blackAlpha.700')} px={4}>
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
-          <Box>Logo</Box>
+          <Box as={Button}
+                  onClick={() => signOut()}>Signout</Box>
           <NavLink>Hi</NavLink>
 
           <Flex alignItems={'center'}>

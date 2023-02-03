@@ -1,5 +1,9 @@
-import { Button, Text, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure } from "@chakra-ui/react";
+import { Button, Text, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, Stack, Input } from "@chakra-ui/react";
 import { Session } from "next-auth";
+import React, { useState } from "react";
+import UserOperations from '../../../../graphql/operations/user';
+import { SearchUsersData, SearchUsersInput } from "../../../../util/types";
+import { useLazyQuery } from '@apollo/client';
 
 interface ConversationModalProps {
     isOpen: boolean;
@@ -8,16 +12,38 @@ interface ConversationModalProps {
 
 const ConversationModal: React.FC<ConversationModalProps> = ({ isOpen, onClose }) => {
 
+    const [username, setUsername] = useState('');
+    // useLazy only works when specified
+    const [searchUsers, { data, loading, error }] = useLazyQuery<
+    SearchUsersData,
+    SearchUsersInput
+    >(UserOperations.Queries.searchUsers);
     
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
+        searchUsers({ variables: { username }})
+    };
+
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent bg='#2d2d2d' pb={4}>
           <ModalHeader>Modal Title</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Text> HI </Text>
+            <form onSubmit={handleSubmit}>
+                <Stack spacing={4}>
+                    <Input 
+                    placeholder="Enter a username"
+                     value={username} 
+                     onChange={(e) => setUsername(e.target.value)}
+                     />
+                    <Button type="submit" disabled={!username}>
+                        Search
+                    </Button>
+                </Stack>
+            </form>
           </ModalBody>
         </ModalContent>
       </Modal>
