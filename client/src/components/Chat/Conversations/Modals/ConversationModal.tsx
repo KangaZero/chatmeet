@@ -28,8 +28,8 @@ const ConversationModal: React.FC<ConversationModalProps> = ({ isOpen, onClose }
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent bg='#2d2d2d' pb={4}>
-          <ModalHeader>Modal Title</ModalHeader>
+        <ModalContent bg='#2d2d2d' pb={5}>
+          <ModalHeader textAlign='center'>Chat & Meet Someone</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <form onSubmit={handleSubmit}>

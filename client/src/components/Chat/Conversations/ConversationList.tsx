@@ -1,7 +1,7 @@
 import { Box, Text } from "@chakra-ui/react";
 import { Session } from "next-auth";
 import { useState } from "react";
-import ConversationModal from "./modal/modal";
+import ConversationModal from "./Modals/ConversationModal";
 
 interface ConversationListProps {
     session: Session;
