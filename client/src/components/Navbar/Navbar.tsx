@@ -17,6 +17,11 @@ import {
   Center,
 } from '@chakra-ui/react';
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
+import { getSession, useSession } from 'next-auth/react';
+import { signIn, signOut } from "next-auth/react";
+
+
+
 
 const NavLink = ({ children }: { children: ReactNode }) => (
   <Link
@@ -35,17 +40,23 @@ const NavLink = ({ children }: { children: ReactNode }) => (
 export default function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const { data : session } = useSession();
+
   return (
     <>
       <Box bg={useColorModeValue('gray.200', 'blackAlpha.700')} px={4}>
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <Box>Logo</Box>
+          <NavLink>Hi</NavLink>
 
           <Flex alignItems={'center'}>
             <Stack direction={'row'} spacing={7}>
               <Button onClick={toggleColorMode}>
                 {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
               </Button>
+
+              {session?.user?.username ?
 
               <Menu>
                 <MenuButton
@@ -69,15 +80,27 @@ export default function Navbar() {
                   </Center>
                   <br />
                   <Center>
-                    <p>Username</p>
+                    <p>{session?.user?.username}</p>
                   </Center>
                   <br />
                   <MenuDivider />
-                  <MenuItem>Your Servers</MenuItem>
-                  <MenuItem>Account Settings</MenuItem>
-                  <MenuItem>Logout</MenuItem>
+                  <MenuItem
+                  as={Button}
+                  href={'/settings'}
+                  >Account Settings</MenuItem>
+                  <MenuItem 
+                  as={Button}
+                  onClick={() => signOut()}
+                  >Logout</MenuItem>
                 </MenuList>
-              </Menu>
+              </Menu> 
+
+              : 
+
+              <Link href='/'>Sign In</Link>
+
+              }
+
             </Stack>
           </Flex>
         </Flex>

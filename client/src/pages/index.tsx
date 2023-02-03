@@ -21,11 +21,15 @@ const Home: NextPage = () => {
   };
 
   return (
-    <Box border="1px solid black" background="yellow.200" height={100}>
+    <Box>
 
-      {session?.user?.username ? <Chat /> : <Auth session={session} reloadSession={reloadSession}/>}
+      {session?.user?.username 
+      ?
+      <Chat session={session} /> 
+      : 
+      <Auth session={session} reloadSession={reloadSession}/>
+      }
 
-    
 
     </Box>
 
