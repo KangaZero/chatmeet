@@ -1,9 +1,15 @@
-import { Button, Text, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, Stack, Input } from "@chakra-ui/react";
+import { useColorModeValue, Divider, Button, Text, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, Stack, Input } from "@chakra-ui/react";
 import { Session } from "next-auth";
 import React, { useState } from "react";
 import UserOperations from '../../../../graphql/operations/user';
-import { SearchUsersData, SearchUsersInput } from "../../../../util/types";
+import { SearchedUsers, SearchUsersData, SearchUsersInput } from "../../../../util/types";
 import { useLazyQuery } from '@apollo/client';
+import UserSearchList from "./UserSearchList";
+import Participants from "./Participants";
+import { toNamespacedPath } from "node:path/win32";
+import toast from "react-hot-toast";
+
+
 
 interface ConversationModalProps {
     isOpen: boolean;
@@ -13,6 +19,7 @@ interface ConversationModalProps {
 const ConversationModal: React.FC<ConversationModalProps> = ({ isOpen, onClose }) => {
 
     const [username, setUsername] = useState('');
+    const [participants, setParticipants] = useState<Array<SearchedUsers>>([])
     // useLazy only works when specified
     const [searchUsers, { data, loading, error }] = useLazyQuery<
     SearchUsersData,
@@ -24,26 +31,103 @@ const ConversationModal: React.FC<ConversationModalProps> = ({ isOpen, onClose }
         searchUsers({ variables: { username }})
     };
 
+    const addParticipant = (user: SearchedUsers) => {
+      setParticipants((prev) => [...prev, user]);
+      setUsername("");
+    };
+
+    const remmoveParticipant = (userId: string):void => {
+      setParticipants((prev) => prev.filter((p) => p.id !== userId))
+    }
+
+    const onCreateConversation = async () => {
+      try {
+        // TODO create createConcersation mutation
+      } catch (error: any) {
+        console.error('onCreateConversation error', error);
+        return toast.error(error?.message);
+      }
+    }
+
+    const styles = {
+      cardBg: useColorModeValue('teal.50', 'whiteAlpha.50'),
+      inputField: useColorModeValue('cyan.100', 'gray.700'),
+      inputFieldFocus: useColorModeValue('orange.50','blackAlpha.300'),
+      text: useColorModeValue('teal.900','yellow.50'),
+      title: useColorModeValue('teal.900','yellow.50'),
+      border: useColorModeValue('teal.900', 'yellow.50'),
+      button: useColorModeValue('yellow.50', 'teal.900'),
+      link: useColorModeValue('blue.500', 'blue.600'),
+      linkHover: {color: useColorModeValue('blue.300', 'blue.700')},
+      buttonHoverBg: {bg: useColorModeValue('teal.200', 'teal.700')},
+      googleButtonBg: useColorModeValue('blue.200', 'blue.600'),
+      googleButtonHoverBg:{bg:useColorModeValue('blue.500','blue.800')},
+      facebookButtonBg: useColorModeValue('gray.300', 'gray.600'),
+      facebookButtonHoverBg:{bg:useColorModeValue('gray.500','gray.800')}
+  } 
+
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent bg='#2d2d2d' pb={5}>
-          <ModalHeader textAlign='center'>Chat & Meet Someone</ModalHeader>
+        <ModalContent 
+        bg={styles.cardBg}
+        borderColor={styles.border}
+        borderWidth='1px'
+        borderRadius='10px 35px 0 0'
+        borderStyle='inset'
+        pb={5}>
+          <ModalHeader color={styles.title} textAlign='center'>Chat & Meet Someone</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <form onSubmit={handleSubmit}>
                 <Stack spacing={4}>
                     <Input 
-                    placeholder="Enter a username"
+                     backgroundColor={styles.inputField}
+                     focusBorderColor={styles.inputFieldFocus}
+                     px={5}
+                     variant='flushed'
+                     placeholder="Enter a username"
                      value={username} 
                      onChange={(e) => setUsername(e.target.value)}
                      />
-                    <Button type="submit" disabled={!username}>
+                     <Divider 
+                     orientation='horizontal'
+                     borderColor={styles.border}/>
+                    <Button 
+                    bg={styles.button}
+                    _hover={styles.buttonHoverBg}
+                    type="submit" 
+                    disabled={!username} 
+                    isLoading={loading}>
                         Search
                     </Button>
                 </Stack>
             </form>
+            {data?.searchUsers && 
+            <UserSearchList 
+            users={data?.searchUsers} 
+            addParticipant={addParticipant} 
+            />}
+           {participants.length !== 0 && 
+           <>
+           <Participants 
+            participants={participants} 
+            removeParticipant={remmoveParticipant} />
+            <Button
+            bg={styles.facebookButtonBg}
+            _hover={styles.facebookButtonHoverBg}
+            mt={5}
+            width='100%'
+            type="button" 
+            disabled={!username} 
+            isLoading={loading}
+            onClick={()=>{}}
+            >
+              Start Chat
+            </Button>
+           </>
+           }
           </ModalBody>
         </ModalContent>
       </Modal>
