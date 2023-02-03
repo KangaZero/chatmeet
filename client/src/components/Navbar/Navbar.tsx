@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import {
   Box,
+  Text,
   Flex,
   Avatar,
   Link,
@@ -49,7 +50,12 @@ export default function Navbar() {
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <Box as={Button}
                   onClick={() => signOut()}>Signout</Box>
-          <NavLink>Hi</NavLink>
+          <NavLink>
+            <Text
+            fontWeight={1000}
+            fontSize='2xl'
+            >ChatMeet</Text>
+            </NavLink>
 
           <Flex alignItems={'center'}>
             <Stack direction={'row'} spacing={7}>
