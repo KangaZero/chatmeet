@@ -3,6 +3,7 @@ import { Session } from "next-auth"
 import ConversationList from "./ConversationList"
 import ConversationOperations from '../../../graphql/operations/conversation';
 import { useQuery } from "@apollo/client";
+import { ConversationsData } from "../../../util/types";
 
 
 interface ConversationWrapperProps {
@@ -15,7 +16,8 @@ const ConversationWrapper: React.FC<ConversationWrapperProps> = ({session}) => {
     data: conversationsData, 
     loading: conversationsLoading,
     error: conversationsError
-   } = useQuery(ConversationOperations.Queries.conversations)
+    // 1st is the data we get, 2nd is what we inputed
+   } = useQuery<ConversationsData, null>(ConversationOperations.Queries.conversations)
 
    console.log('conversationsData', conversationsData)
 
