@@ -26,3 +26,7 @@ export interface CreateUsernameResponse {
     success?: boolean;
     error?: string;
 }
+
+export interface CreateConversationResponse {
+    conversationId: string;
+}

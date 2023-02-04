@@ -23,3 +23,8 @@ export interface SearchUsersData {
     searchUsers: Array<SearchedUsers>
 }
 
+export interface CreateConversationData {
+    createConversation: {
+      conversationId: string;
+    };
+  }

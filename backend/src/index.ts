@@ -60,4 +60,4 @@ async function main() {
   console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
 }
 
-main().catch(err => console.error(err))
+main().catch(err => console.error(err)) 
