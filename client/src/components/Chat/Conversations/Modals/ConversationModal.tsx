@@ -2,29 +2,41 @@ import { useColorModeValue, Divider, Button, Text, Modal, ModalBody, ModalCloseB
 import { Session } from "next-auth";
 import React, { useState } from "react";
 import UserOperations from '../../../../graphql/operations/user';
-import { SearchedUsers, SearchUsersData, SearchUsersInput } from "../../../../util/types";
-import { useLazyQuery } from '@apollo/client';
+import ConversationOperations from '../../../../graphql/operations/conversation';
+import { CreateConversationData, SearchedUsers, SearchUsersData, SearchUsersInput } from "../../../../util/types";
+import { useLazyQuery, useMutation } from '@apollo/client';
 import UserSearchList from "./UserSearchList";
 import Participants from "./Participants";
 import { toNamespacedPath } from "node:path/win32";
 import toast from "react-hot-toast";
 
 
-
 interface ConversationModalProps {
     isOpen: boolean;
     onClose: () => void;
+    session: Session;
+
 }
 
-const ConversationModal: React.FC<ConversationModalProps> = ({ isOpen, onClose }) => {
+const ConversationModal: React.FC<ConversationModalProps> = ({ isOpen, onClose, session }) => {
 
     const [username, setUsername] = useState('');
     const [participants, setParticipants] = useState<Array<SearchedUsers>>([])
+
+    const {
+      user: { id: userId },
+    } = session;
+  
     // useLazy only works when specified
     const [searchUsers, { data, loading, error }] = useLazyQuery<
     SearchUsersData,
     SearchUsersInput
     >(UserOperations.Queries.searchUsers);
+
+    const [createConversation, { loading: createConversationLoading }] =
+    useMutation<CreateConversationData, { participantIds: Array<string> }>(
+      ConversationOperations.Mutations.createConversation
+    );
     
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -41,8 +53,36 @@ const ConversationModal: React.FC<ConversationModalProps> = ({ isOpen, onClose }
     }
 
     const onCreateConversation = async () => {
+
+      const participantIds = [userId, ...participants.map((p) => p.id)];
+
       try {
-        // TODO create createConcersation mutation
+        const { data, errors } = await createConversation({
+          variables: {
+            participantIds,
+          },
+        });
+
+        console.log(data, "create COnvoo")
+
+        if (!data?.createConversation || errors) {
+          throw new Error("Failed to create conversation");
+        }
+
+        const {
+          createConversation: { conversationId },
+        } = data;
+
+        // router.push({ query: { conversationId } });
+  
+        /**
+         * Clear state and close modal
+         * on successful creation
+         */
+        setParticipants([]);
+        setUsername("");
+        onClose();
+
       } catch (error: any) {
         console.error('onCreateConversation error', error);
         return toast.error(error?.message);
@@ -122,7 +162,7 @@ const ConversationModal: React.FC<ConversationModalProps> = ({ isOpen, onClose }
             type="button" 
             disabled={!username} 
             isLoading={loading}
-            onClick={()=>{}}
+            onClick={onCreateConversation}
             >
               Start Chat
             </Button>
