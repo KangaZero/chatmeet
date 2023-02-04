@@ -1,6 +1,10 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { useQuery } from "@apollo/client";
+import { Box, Button, Flex } from "@chakra-ui/react";
 import { Session } from "next-auth"
 import { useRouter } from "next/router";
+import ConversationOperations from '../../../graphql/operations/conversation';
+import { SearchConversationsData } from "../../../util/types";
+
 
 
 interface FeedWrapperProps {
@@ -12,6 +16,10 @@ const FeedWrapper: React.FC<FeedWrapperProps> = ({session}) => {
   const router = useRouter();
 
   const {conversationId} = router.query;
+
+  // const [Conversations, { data, loading, error }] = useQuery<SearchConversationsData>(ConversationOperations.Query.conversations)
+
+  // console.log('conversations', data)
 
   return (
     <Flex 
@@ -25,6 +33,9 @@ const FeedWrapper: React.FC<FeedWrapperProps> = ({session}) => {
       <Flex
         mx='auto'>
         {conversationId}
+        <Button>
+          Check
+        </Button>
         </Flex>
     ) : (
       <Box>
