@@ -5,13 +5,14 @@ import { User } from "@prisma/client";
 
 
 
+
 const resolvers = {
     Query: {
         searchUsers: async (
             _: any,
             args: { username: string },
             context: GraphQLContext
-          ): Promise<Array<User>> => {
+          ) => {
             const { username: searchedUsername } = args;
             const { session, prisma } = context;
       
@@ -37,7 +38,8 @@ const resolvers = {
               return users;
             } catch (error: any) {
               console.log("searchUsers error", error);
-              throw new GraphQLError(error?.message);
+            //   throw new GraphQLError(error?.message);
+              console.error(error)
             }
           },
         },
