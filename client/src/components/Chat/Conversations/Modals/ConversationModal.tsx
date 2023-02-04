@@ -9,6 +9,7 @@ import UserSearchList from "./UserSearchList";
 import Participants from "./Participants";
 import { toNamespacedPath } from "node:path/win32";
 import toast from "react-hot-toast";
+import { useRouter } from "next/router";
 
 
 interface ConversationModalProps {
@@ -19,6 +20,8 @@ interface ConversationModalProps {
 }
 
 const ConversationModal: React.FC<ConversationModalProps> = ({ isOpen, onClose, session }) => {
+
+    const router = useRouter();
 
     const [username, setUsername] = useState('');
     const [participants, setParticipants] = useState<Array<SearchedUsers>>([])
@@ -73,7 +76,8 @@ const ConversationModal: React.FC<ConversationModalProps> = ({ isOpen, onClose, 
           createConversation: { conversationId },
         } = data;
 
-        // router.push({ query: { conversationId } });
+        // Adds to the URL
+        router.push({ query: { conversationId } });
   
         /**
          * Clear state and close modal
