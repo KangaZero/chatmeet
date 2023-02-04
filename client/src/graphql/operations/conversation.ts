@@ -2,10 +2,10 @@
 import { gql } from "@apollo/client";
 
 const ConversationFields = `
-conservations {
+conversations {
     id
+    updatedAt
     participants {
-      id
       user {
         id
         username
@@ -13,15 +13,11 @@ conservations {
       hasSeenLatestMessage
     }
     latestMessage {
-      id
       sender{
           id
           username
       }
-      body
-      createdAt
     }
-    updatedAt
   }
 `
 

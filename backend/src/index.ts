@@ -35,7 +35,9 @@ async function main() {
   // Same ApolloServer initialization as before, plus the drain plugin
   // for our httpServer.
   const server = new ApolloServer({
-    schema,
+    typeDefs,
+    resolvers,
+    // schema,
     csrfPrevention: true,
     cache: 'bounded',
     context: async ({req, res}): Promise<GraphQLContext> => {

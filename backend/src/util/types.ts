@@ -28,5 +28,35 @@ export interface CreateUsernameResponse {
 }
 
 export interface CreateConversationResponse {
-    conversationId: string;
+    conversationId: string | null;
+}
+
+/**
+ *  Conversations 
+ * */ 
+
+export interface Conversation {
+    id: String;
+    latestMessage: Message | null;
+    participants: Participant[] | null;
+    createdAt: ISODateString | null;
+    updatedAt: ISODateString | null;
+}
+
+
+/**
+ *  Messages 
+ * */ 
+export interface Message {
+    id: String | null;
+    sender: User | null;
+}
+
+/**
+ *  Participants 
+ * */ 
+export interface Participant {
+    id: String | null;
+    user: User | null;
+    hasSeenLatestMessage: boolean | null;
 }
