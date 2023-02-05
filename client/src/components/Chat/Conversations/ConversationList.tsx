@@ -14,8 +14,6 @@ interface ConversationListProps {
     conversations: Array<ConversationsData>;
 }
 
-
-
 const ConversationList: React.FC<ConversationListProps> = ({ session, conversations }) => {
 
 

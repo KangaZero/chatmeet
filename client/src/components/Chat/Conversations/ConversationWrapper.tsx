@@ -19,7 +19,7 @@ const ConversationWrapper: React.FC<ConversationWrapperProps> = ({session}) => {
     // 1st is the data we get, 2nd is what we inputed
    } = useQuery<ConversationsData, null>(ConversationOperations.Queries.conversations)
 
-   
+   console.log(conversationsData);
 
   return (
     <Box width={{ base: '100%', md: '400px' }} bg='whiteAlpha.50' py={6} px={3}>
