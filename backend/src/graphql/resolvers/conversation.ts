@@ -71,7 +71,7 @@ const resolvers = {
             ): Promise<{conversationId: string}> => {
 
             const { participantIds } = args;
-            const { prisma, session} = context;
+            const { prisma, session, pubsub} = context;
 
             if (!session?.user) {
                 throw new GraphQLError("Not authorised");
@@ -118,7 +118,9 @@ const resolvers = {
                         // conversationPopulated,
                 });
 
-                // TODO emit a conversation_created event using pubsub
+                pubsub.publish('CONVERSATION_CREATED', {
+                  conversationCreated: conversation,
+                })
 
                 return {
                     conversationId: conversation.id,
@@ -131,6 +133,21 @@ const resolvers = {
             
         }
     },
+    Subscription: {
+        conversationCreated: {
+            subscribe: (_: any, __: any, context: GraphQLContext) => {
+              
+              const { pubsub } = context;
+            
+              try {
+                return pubsub.asyncIterator(['CONVERSATION_CREATED'])
+              } catch (error: any) {
+                console.log("conversationCreated error", error);
+                throw new GraphQLError(error);
+              }
+            },
+          },
+},
 };
 
 // export const participantPopulated =

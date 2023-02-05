@@ -16,6 +16,10 @@ const typeDefs = gql`
     conversations: [Conversation]
   }
 
+  type Subscription{
+    conversationCreated: Conversation
+  }
+
   type Mutation {
     createUsername(username: String): CreateUsernameResponse
     createConversation(participantIds: [String]): CreateConversationResponse
