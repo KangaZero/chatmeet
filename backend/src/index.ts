@@ -6,13 +6,12 @@ import http from 'http';
 import * as dotenv from 'dotenv';
 import { getSession } from 'next-auth/react';
 import { PrismaClient } from '@prisma/client';
-import { PubSub } from 'graphql-subscriptions';
 import { WebSocketServer } from 'ws';
 import { useServer } from 'graphql-ws/lib/use/ws';
 
 import typeDefs from './graphql/typeDefs';
 import resolvers from './graphql/resolvers';
-import { GraphQLContext, Session, SubscriptionContext } from './util/types';
+import { GraphQLContext, Session } from './util/types';
 
 async function main() {
   dotenv.config();
@@ -22,7 +21,6 @@ async function main() {
   // enabling our servers to shut down gracefully.
   const httpServer = http.createServer(app);
   const prisma = new PrismaClient();
-  const pubsub = new PubSub();
 
 
   const schema = makeExecutableSchema(
@@ -43,21 +41,7 @@ const wsServer = new WebSocketServer({
 });
 
 // Save the returned server's info so we can shutdown this server later
-const serverCleanup = useServer({ 
-  schema,
-  context: async (ctx: SubscriptionContext): Promise<GraphQLContext> => {
-    // if user exists/ a session is present
-    if (ctx.connectionParams && ctx.connectionParams.session) {
-      const { session } = ctx.connectionParams;
-
-      return { session, prisma, pubsub };
-    }
-
-    // else if there is no session / user is not logged in
-    return { session: null, prisma };
-
-},
-}, wsServer);
+const serverCleanup = useServer({ schema }, wsServer);
 
   // Same ApolloServer initialization as before, plus the drain plugin
   // for our httpServer.
