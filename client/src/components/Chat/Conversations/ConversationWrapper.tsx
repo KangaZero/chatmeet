@@ -21,8 +21,6 @@ const ConversationWrapper: React.FC<ConversationWrapperProps> = ({session}) => {
 
    
 
-   console.log('conversationsData', conversationsData)
-
   return (
     <Box width={{ base: '100%', md: '400px' }} bg='whiteAlpha.50' py={6} px={3}>
         {/* Add skeleton */}

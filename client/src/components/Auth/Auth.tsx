@@ -19,7 +19,7 @@ const Auth: React.FC<IAuthProps> = ({ session, reloadSession }) => {
 const [username, setUsername] = useState('');
 
 const styles = {
-    // Light then Dark
+    // (light, dark)
     cardBg: useColorModeValue('teal.50', 'whiteAlpha.50'),
     inputField: useColorModeValue('cyan.100', 'gray.700'),
     inputFieldFocus: useColorModeValue('orange.50','blackAlpha.300'),

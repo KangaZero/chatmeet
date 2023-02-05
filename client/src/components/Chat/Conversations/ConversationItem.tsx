@@ -1,4 +1,4 @@
-import { Stack, Text } from "@chakra-ui/react"
+import { Box, Divider, Stack, Text, useColorModeValue } from "@chakra-ui/react"
 import { Conversation } from "../../../../../backend/src/util/types"
 import conversation from "../../../graphql/operations/conversation"
 
@@ -10,10 +10,17 @@ type ConversationItemProps = {
   console.log("HEU ALL")
   
     return (
-    <Stack> 
+    <Stack 
+    p={4}
+    bg={useColorModeValue("teal.50", "whiteAlpha.50")} 
+    _hover={{
+      bg: useColorModeValue("teal.100", "whiteAlpha.300"),
+    }}
+    > 
       <Text>
       {conversation.id}
         </Text>  
+        <Divider />
     </Stack>
   )
 }

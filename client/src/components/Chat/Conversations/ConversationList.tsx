@@ -11,7 +11,7 @@ import ConversationModal from "./Modals/ConversationModal";
 
 interface ConversationListProps {
     session: Session;
-    conversations: any;
+    conversations: Array<ConversationsData>;
 }
 
 
