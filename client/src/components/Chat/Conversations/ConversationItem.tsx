@@ -7,7 +7,6 @@ type ConversationItemProps = {
 }
 
  const ConversationItem: React.FC<ConversationItemProps> = ({ conversation}) => {
-  console.log("HEU ALL")
   
     return (
     <Stack 

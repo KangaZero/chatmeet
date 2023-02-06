@@ -1,6 +1,6 @@
 import { Box, Text } from "@chakra-ui/react";
 import { Session } from "next-auth";
-import { useState } from "react";
+import { useState, ReactNode } from "react";
 import { Conversation } from "../../../../../backend/src/util/types";
 import { ConversationsData } from "../../../util/types";
 import ConversationOperations from '../../../graphql/operations/conversation';
@@ -11,7 +11,8 @@ import ConversationModal from "./Modals/ConversationModal";
 
 interface ConversationListProps {
     session: Session;
-    conversations: Array<ConversationsData>;
+    conversations: Array<any>;
+    // conversations: Array<ConversationsData> 
 }
 
 const ConversationList: React.FC<ConversationListProps> = ({ session, conversations }) => {
