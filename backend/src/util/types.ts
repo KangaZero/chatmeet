@@ -2,7 +2,10 @@ import { ISODateString } from 'next-auth';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { PubSub } from "graphql-subscriptions";
 import { Context } from "graphql-ws/lib/server";
-
+import {
+    conversationPopulated,
+    participantPopulated,
+  } from "../graphql/resolvers/conversation";
 /**
  * Server Configuration
  */
@@ -42,6 +45,25 @@ export interface CreateUsernameResponse {
 /**
  * Conversations
  */
+
+// export type ConversationPopulated = Prisma.ConversationGetPayload<{
+//     include: typeof conversationPopulated;
+//   }>;
+  
+//   export type ParticipantPopulated = Prisma.ConversationParticipantGetPayload<{
+//     include: typeof participantPopulated;
+//   }>;
+  
+//   export interface ConversationUpdatedSubscriptionPayload {
+//     conversationUpdated: {
+//       conversation: ConversationPopulated;
+//     };
+//   }
+  
+//   export interface ConversationDeletedSubscriptionPayload {
+//     conversationDeleted: ConversationPopulated;
+//   }
+  
 
 export interface CreateConversationResponse {
     conversationId: string | null;

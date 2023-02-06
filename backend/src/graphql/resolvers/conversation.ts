@@ -1,6 +1,7 @@
 import { GraphQLContext, CreateConversationResponse, Conversation } from "../../util/types";
 import { GraphQLError } from "graphql";
 import { Prisma } from "@prisma/client";
+import { withFilter } from 'graphql-subscriptions';
 
 // import { conversationPopulated } from "../../../../server/src/graphql/resolvers/conversation";
 
@@ -135,7 +136,7 @@ const resolvers = {
     },
     Subscription: {
         conversationCreated: {
-            subscribe: (_: any, __: any, context: GraphQLContext) => {
+            subscribe: withFilter((_: any, __: any, context: GraphQLContext) => {
               
               const { pubsub } = context;
             
@@ -146,6 +147,15 @@ const resolvers = {
                 throw new GraphQLError(error);
               }
             },
+            (payload, _ , context: GraphQLContext) => {
+              const { session } = context;
+              const { conversationCreated: { participants }} = payload
+
+              const userIsParticipant = !!participants.find((p: any) => p.userId === session?.user?.id);
+
+              return userIsParticipant;
+            }
+          )
           },
 },
 };
