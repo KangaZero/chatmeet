@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import {
   Flex,
   Box,
@@ -14,12 +15,32 @@ import {
   useColorModeValue,
   Link,
   Icon,
+  Center
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { TriangleUpIcon } from "@chakra-ui/icons";
+import { toast } from 'react-hot-toast';
+import { motion } from "framer-motion";
+import { NextPage } from "next";
+import { Session } from 'next-auth';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 
-export default function SignupCard() {
+
+interface IAuthProps {
+    session: Session | null;
+    request: NextRequest;
+}
+
+const SignupCard: React.FC<IAuthProps> =({session, request}) => {
+
+    if (session?.user) {
+        const url = request.nextUrl.clone()
+        url.pathname = '/'
+        return NextResponse.redirect(url)  
+    }
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -41,14 +62,19 @@ export default function SignupCard() {
   const handleSignUp = async (e) => {
     e.preventDefault();
 
+    if (userFormData.password !== confirmPassword) {
+        toast.error("Password and Confirm Password do not match");
+        return;
+      }
+
     try {
-        const { data } = await addNewUser({
-            variables: { ...userFormData },
-          });    
+        toast.success('this is test')
+        // const { data } = await addNewUser({
+        //     variables: { ...userFormData },
+        //   });    
         
-    } catch (error) {
-      console.error(err);
-        
+    } catch (error: any) {
+        toast.error('Oops something went wrong')
     }
 
 
@@ -75,11 +101,17 @@ export default function SignupCard() {
   };
 
   return (
-    <Flex minH={"100vh"} align={"center"} justify={"center"}>
+    <motion.div 
+    initial={{ opacity: 0, scale: 0.1 }}
+    animate={{ opacity: 1, scale: 1 }}
+    transition={{ duration: 0.8 }}
+    >
+    <Center height="100vh">
+    <Flex>
       <Stack
         spacing={8}
         mx={"auto"}
-        maxW={"lg"}
+        maxW={"xl"}
         py={12}
         px={6}
         bg={styles.cardBg}
@@ -132,7 +164,8 @@ export default function SignupCard() {
                   />
                 </FormControl>
               </Box>
-            </HStack>
+              <Box>
+
             <FormControl id="email" isRequired>
               <FormLabel>Email address</FormLabel>
               <Input 
@@ -143,7 +176,10 @@ export default function SignupCard() {
               value={userFormData.email}
               onChange={handleInputChange}
                />
+
             </FormControl>
+              </Box>
+            </HStack>
             <FormControl id="password" isRequired>
               <FormLabel>Password</FormLabel>
               <InputGroup>
@@ -213,5 +249,11 @@ export default function SignupCard() {
         </Box>
       </Stack>
     </Flex>
+    </Center>
+</motion.div>
+
   );
 }
+
+
+export default SignupCard

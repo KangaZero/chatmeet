@@ -3,7 +3,7 @@ import { Box, Button, Flex } from "@chakra-ui/react";
 import { Session } from "next-auth"
 import { useRouter } from "next/router";
 import ConversationOperations from '../../../graphql/operations/conversation';
-import { SearchConversationsData } from "../../../util/types";
+import { ConversationsData } from "../../../util/types";
 
 
 

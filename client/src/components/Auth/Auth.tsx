@@ -8,8 +8,8 @@ import userOperations from '../../graphql/operations/user';
 import { CreateUsernameData, CreateUsernameVariables } from '../../util/types';
 import { toast } from 'react-hot-toast';
 import { TriangleUpIcon } from '@chakra-ui/icons';
+import { motion } from "framer-motion";
 
-import { motion } from "framer-motion"
 interface IAuthProps {
     session: Session | null;
     reloadSession: () => void;
