@@ -1,6 +1,7 @@
 import { Button, Text, Center, Stack, Image, Input, Icon, useColorModeValue } from '@chakra-ui/react';
 import { Session } from 'next-auth';
 import { signIn } from "next-auth/react";
+import Link from 'next/link';
 import { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import userOperations from '../../graphql/operations/user';
@@ -126,7 +127,7 @@ const handleSubmit = async () => {
                                 minWidth={'100%'}
                                 bg={styles.googleButtonBg}
                                 _hover={styles.googleButtonHoverBg}
-                                leftIcon={<Image height='20px' src='google-logo.png'/>}
+                                leftIcon={<Image height='20px' alt='google logo' src='google-logo.png'/>}
                                 onClick={() => signIn('google')}>
                                 Sign in via Google
                             </Button>
@@ -134,19 +135,19 @@ const handleSubmit = async () => {
                                 minWidth={'100%'}
                                 bg={styles.facebookButtonBg}
                                 _hover={styles.facebookButtonHoverBg}
-                                leftIcon={<Image height='20px' src='facebook-logo.svg'/>}
+                                leftIcon={<Image height='20px' alt='facebook logo' src='facebook-logo.svg'/>}
                                 onClick={() => signIn('facebook')}>
                                 Sign in via Facebook
                             </Button>
                             <Text>Or</Text>
-                            <a href='/signup'>
+                            <Link href='/signup'>
                                 <Text
                                 color={styles.link}
                                 _hover={styles.linkHover} 
                                 >
                                     Sign up manually
                                 </Text>
-                            </a>
+                            </Link>
                     </>
                 )} 
             </Stack>

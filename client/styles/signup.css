@@ -1,0 +1,271 @@
+/* Source: 
+For input fields: https://uiverse.io/G4b413l/mean-stingray-9 
+Form template: https://ordinarycoders.com/blog/article/tailwindcss-custom-forms
+Code has been altered to adjust the application
+*/
+
+/* .signup-container{
+    margin: auto;
+    border: 2px solid grey;
+    width: 500px;
+} */
+
+@media only screen and (max-width: 768px) {
+    .signup-container {
+    margin: auto;
+     width: 350px;
+    }
+}
+
+.group {
+    position: relative;
+   }
+   
+   .input {
+    font-size: 16px;
+    padding: 10px 10px 10px 5px;
+    display: block;
+    width: 440px;
+    color: rgb(0, 0, 0);
+    font-weight: 600;
+    border: blue;
+    border-bottom: 1px solid #515151;
+    background: rgba(253, 248, 221, 0.8);
+    opacity: 0.2;
+   }
+
+   @media only screen and (max-width: 768px) {
+   .input {
+    width: 300px;
+   }
+   }
+   
+   .input:focus {
+    outline: none;
+   }
+   
+   label {
+    color: rgb(92, 46, 46);
+    font-size: 15px;
+    font-weight: normal;
+    position: absolute;
+    pointer-events: none;   
+    left: 5px;
+    top: 10px;
+    transition: 0.2s ease all;
+    -moz-transition: 0.2s ease all;
+    -webkit-transition: 0.2s ease all;
+   }
+   
+   .input:focus ~ label, .input:valid ~ label {
+    top: -20px;
+    font-size: 14px;
+    color: #243063;
+   }
+   
+   .bar {
+    position: relative;
+    display: block;
+    width: 440px;
+   }
+
+   @media only screen and (max-width: 768px) {
+    .bar {
+     width: 300px;
+    }
+    }
+   
+   .bar:before, .bar:after {
+    content: '';
+    height: 2px;
+    width: 0;
+    bottom: 1px;
+    position: absolute;
+    background: #5264AE;
+    transition: 0.2s ease all;
+    -moz-transition: 0.2s ease all;
+    -webkit-transition: 0.2s ease all;
+   }
+   
+   .bar:before {
+    left: 50%;
+   }
+   
+   .bar:after {
+    right: 50%;
+   }
+   
+   .input:focus ~ .bar:before, .input:focus ~ .bar:after {
+    width: 50%;
+   }
+   
+   .highlight {
+    position: absolute;
+    height: 60%;
+    width: 440px;
+    top: 25%;
+    left: 0;
+    pointer-events: none;
+    opacity: 0.5;
+   }
+
+   @media only screen and (max-width: 768px) {
+    .highlight {
+     width: 300px;
+    }
+    }
+   
+   .input:focus ~ .highlight {
+    animation: inputHighlighter 0.3s ease;
+   }
+   
+   @keyframes inputHighlighter {
+    from {
+     background: #5264AE;
+    }
+   
+    to {
+     width: 100;
+     background: transparent;
+    }
+   }
+
+   .custom-span {
+    position: relative;
+    width: 20px;
+    left: 90%;
+    top: 10%;
+    pointer-events: auto;
+   }
+
+   .custom-link-container {
+    position: relative;
+    top: -1em;
+   }
+
+/* Checkbox CSS */
+ /* Hide the default checkbox */
+.custom-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+   }
+   
+   .custom-container {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    font-size: 25px;
+    /* user-select: none; */
+   }
+
+   .custom-checkbox-label {
+    pointer-events: visible;
+   }
+   
+   /* Create a custom checkbox */
+   .checkmark {
+    position: relative;
+    top: -0.15rem;
+    left: 0;
+    height: 0.6em;
+    width: 0.6em;
+    /* background: rgb(92, 46, 46); */
+    border-radius: 5px;
+    border: 3px solid grey;
+    transition: all 0.7s;
+    --spread: 7px;
+   }
+   
+   /* When the checkbox is checked, add a blue background */
+   .custom-container input:checked ~ .checkmark {
+    background: rgb(109, 108, 108);
+    box-shadow: -7px -7px var(--spread) 0px #5B51D8, 0 -7px var(--spread) 0px #833AB4, 7px -7px var(--spread) 0px #E1306C, 7px 0 var(--spread) 0px #FD1D1D, 7px 7px var(--spread) 0px #F77737, 0 7px var(--spread) 0px #FCAF45, -7px 7px var(--spread) 0px #FFDC80;
+   }
+   
+   /* Create the checkmark/indicator (hidden when not checked) */
+   .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+   }
+   
+   /* Show the checkmark when checked */
+   .custom-container input:checked ~ .checkmark:after {
+    display: block;
+   }
+   
+   /* Style the checkmark/indicator */
+   .custom-container .checkmark:after {
+    left: 0.1em;
+    top: 0.01em;
+    width: 0.2em;
+    height: 0.37em;
+    border: solid #c6c4c4;
+    border-width: 0 0.1em 0.1em 0;
+    transform: rotate(45deg);
+   }
+
+/* Sign Up Button */
+
+  .light-submit-button {
+      display: flex;
+      position: relative;
+      top: -0.5em;
+
+    }
+    
+  .box {
+    width: 35px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    transition: all .8s;
+    cursor: pointer;
+    position: relative;
+    background: #34c4ff;
+    opacity: 0.75;
+    overflow: hidden;
+  }
+  
+  .box:before {
+    content: "E";
+    position: absolute;
+    top: 0;
+    background: #387ffb;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(100%);
+    transition: transform .4s;
+  }
+  
+  .box:nth-child(2)::before {
+    transform: translateY(-100%);
+    content: 'N';
+  }
+  
+  .box:nth-child(3)::before {
+    content: 'T';
+  }
+  
+  .box:nth-child(4)::before {
+    transform: translateY(-100%);
+    content: 'E';
+  }
+  
+  .box:nth-child(5)::before {
+    content: 'R';
+  }
+  
+  .light-submit-button:hover .box:before {
+    transform: translateY(0);
+  }

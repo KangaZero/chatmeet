@@ -1,5 +1,16 @@
 import { Participant } from '../../../backend/src/util/types';
 
+
+interface DateTimeFormatPartTypesRegistry {
+    day: any
+    hour: any
+    minute: any
+    month: any
+    year: any
+}
+
+type DateTimeFormatPartTypes = keyof DateTimeFormatPartTypesRegistry;
+
 export const formatUsernames = (
     participants: Array<Participant>,
     myUserId: string
@@ -12,7 +23,7 @@ export const formatUsernames = (
 }
 export const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+    const options: DateTimeFormatPartTypesRegistry= { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
     let formattedDate = new Intl.DateTimeFormat('en-AU', options).format(date);
   
     const today = new Date();

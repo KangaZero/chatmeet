@@ -17,7 +17,7 @@ const theme = extendTheme(
     },
     fonts: {
         body: "Garamond , sans-serif"
-    },fontSizes: {
+    }, fontSizes: {
         xs: "0.75rem",
         sm: "0.875rem",
         md: "1rem",
