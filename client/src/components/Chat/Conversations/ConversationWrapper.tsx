@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Box, useColorModeValue } from "@chakra-ui/react";
 import { Session } from "next-auth";
 import ConversationList from "./ConversationList";
 import ConversationOperations from "../../../graphql/operations/conversation";
@@ -8,6 +8,7 @@ import { Conversation } from "../../../../../backend/src/util/types";
 import { useEffect } from "react";
 import { MdRouter } from "react-icons/md";
 import router from "next/router";
+import { useRouter } from 'next/router';
 
 interface ConversationWrapperProps {
   session: Session;
@@ -30,6 +31,10 @@ const ConversationWrapper: React.FC<ConversationWrapperProps> = ({
     // Push convoId to router query paramas
    router.push({query: { conversationId}});
   }
+
+  const router = useRouter();
+  const { query: { conversationId }} = router;
+
 
   const subscribeToNewConversations = () => {
     conversationsSubscribed({
@@ -65,7 +70,9 @@ const ConversationWrapper: React.FC<ConversationWrapperProps> = ({
   
 
   return (
-    <Box width={{ base: "100%", md: "400px" }} bg="whiteAlpha.50" py={6} px={3}>
+    <Box 
+    display={{base: conversationId ? 'none' : 'flex', md: 'flex'}}
+    width={{ base: "100%", md: "400px" }} bg={useColorModeValue('blue.100','gray.800')} py={6} px={3}>
       {/* Add skeleton */}
       <ConversationList
         session={session}

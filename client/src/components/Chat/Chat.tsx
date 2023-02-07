@@ -10,7 +10,7 @@ interface IChatProps {
 
 const Chat: React.FC<IChatProps> = ({ session }) => {
   return (
-    <Flex height={"100vh"} border='1px solid orange'>
+    <Flex height={"100vh"}>
        <ConversationWrapper session={session} />
         <FeedWrapper session={session} />
     </Flex>

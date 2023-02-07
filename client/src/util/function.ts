@@ -41,8 +41,9 @@ export const formatDate = (dateString: string): string => {
       formattedDate = `Today at ${hours}:${minutes} ${ampm}`;
     } else if (date.toDateString() === yesterday.toDateString()) {
       formattedDate = `Yesterday at ${hours}:${minutes} ${ampm}`;
-    } else {
-      formattedDate = formattedDate.replace(/(\d{2}:\d{2})/, `${hours}:${minutes} ${ampm}`);
+    } else { 
+        // adding ${ampm} at the end creates another am/pm for some odd reason
+      formattedDate = formattedDate.replace(/(\d{2}:\d{2})/, `${hours}:${minutes}`);
     }
   
     return formattedDate;

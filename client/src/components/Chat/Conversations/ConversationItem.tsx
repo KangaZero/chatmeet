@@ -60,6 +60,26 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
   //   onDeleteConversation,
   //   onLeaveConversation,
 }) => {
+
+  const styles = {
+    // (light, dark)
+    cardBg: useColorModeValue('teal.50', 'whiteAlpha.200'),
+    cardBgHover: {bg: useColorModeValue("teal.100", "whiteAlpha.100")},
+    inputField: useColorModeValue('cyan.100', 'gray.700'),
+    inputFieldFocus: useColorModeValue('orange.50','blackAlpha.300'),
+    text: useColorModeValue('teal.900','yellow.50'),
+    title: useColorModeValue('teal.900','yellow.50'),
+    border: useColorModeValue('teal.900', 'yellow.50'),
+    button: useColorModeValue('yellow.50', 'teal.900'),
+    link: useColorModeValue('blue.500', 'blue.600'),
+    linkHover: {color: useColorModeValue('blue.300', 'blue.700')},
+    buttonHoverBg: {bg: useColorModeValue('teal.200', 'teal.700')},
+    googleButtonBg: useColorModeValue('blue.200', 'blue.600'),
+    googleButtonHoverBg:{bg:useColorModeValue('blue.500','blue.800')},
+    facebookButtonBg: useColorModeValue('gray.300', 'gray.600'),
+    facebookButtonHoverBg:{bg:useColorModeValue('gray.500','gray.800')}
+} 
+
   const [menuOpen, setMenuOpen] = useState(false);
 
   console.log('conversationITME', conversation)
@@ -72,7 +92,7 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
       onClick();
     } else if (event.type === "contextmenu") {
       event.preventDefault();
-      setMenuOpen(true);
+      setMenuOpen(!menuOpen);
     }
   };
 
@@ -84,14 +104,14 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
       p={4}
       cursor="pointer"
       borderRadius={4}
-      bg={isSelected ? "whiteAlpha.200" : "none"}
-      _hover={{ bg: "whiteAlpha.200" }}
+      bg={isSelected ? `${styles.cardBg}` : "none"}
+      _hover={styles.cardBgHover}
       onClick={handleClick}
       onContextMenu={handleClick}
       position="relative"
     >
       <Menu isOpen={menuOpen} onClose={() => setMenuOpen(false)}>
-        <MenuList bg="#2d2d2d">
+        <MenuList bg="#fdfd">
           <MenuItem
             icon={<AiOutlineEdit fontSize={20} />}
             onClick={(event) => {
@@ -130,7 +150,7 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
         )}
       </Flex> */}
       <Avatar />
-      <Flex justify="space-between" width="80%" height="100%">
+      <Flex justify="space-between" width="80%" height="100%" py={3}>
         <Flex direction="column" width="70%" height="100%">
           <Text
             fontWeight={600}
@@ -143,7 +163,6 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
           {conversation.latestMessage && (
             <Box width="140%">
               <Text
-                color="whiteAlpha.700"
                 whiteSpace="nowrap"
                 overflow="hidden"
                 textOverflow="ellipsis"
@@ -153,7 +172,7 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
             </Box>
           )}
         </Flex>
-        <Text color="blackAlpha.700" textAlign="right">
+        <Text textAlign="right">
           {formatDate(conversationUpdatedAt)}
         </Text>
       </Flex>

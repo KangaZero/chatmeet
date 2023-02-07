@@ -17,15 +17,17 @@ import {
   Icon,
   Center
 } from "@chakra-ui/react";
+import { Field, Form, Formik } from 'formik';
 import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { TriangleUpIcon } from "@chakra-ui/icons";
 import { toast } from 'react-hot-toast';
 import { motion } from "framer-motion";
-import { NextPage } from "next";
+import next, { NextPage } from "next";
 import { Session } from 'next-auth';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import NextLink from 'next/link';
 
 
 interface IAuthProps {
@@ -54,13 +56,31 @@ const SignupCard: React.FC<IAuthProps> =({session, request}) => {
 
     const [confirmPassword, setConfirmPassword] = useState('');
 
+//     At least one uppercase letter
+// At least one lowercase letter
+// At least one number
+// At least one special character
+// No whitespaces
+// A minimum length of 5 characters
+    const validatePassword = (value: string) => {
+        const pattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{5,}$/;
+        if (!value) {
+          return "Password is required";
+        } else if (value.length < 5) {
+          return "Password must be at least 5 characters long";
+        } else if (!pattern.test(value)) {
+          return "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character";
+        }
+      }
+
   const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
     setUserFormData({ ...userFormData, [name]: value })
   };
 
-  const handleSignUp = async (e) => {
+  const handleSignUp = async (e: any) => {
     e.preventDefault();
+
 
     if (userFormData.password !== confirmPassword) {
         toast.error("Password and Confirm Password do not match");
@@ -101,12 +121,12 @@ const SignupCard: React.FC<IAuthProps> =({session, request}) => {
   };
 
   return (
+      <Center height="110vh">
     <motion.div 
     initial={{ opacity: 0, scale: 0.1 }}
     animate={{ opacity: 1, scale: 1 }}
     transition={{ duration: 0.8 }}
     >
-    <Center height="100vh">
     <Flex>
       <Stack
         spacing={8}
@@ -138,6 +158,8 @@ const SignupCard: React.FC<IAuthProps> =({session, request}) => {
           // boxShadow={'lg'}
           p={8}
         >
+    
+          <form onSubmit={handleSignUp}>
           <Stack spacing={4} color={styles.text}>
             <FormControl id="username" isRequired>
               <FormLabel>Username</FormLabel>
@@ -180,29 +202,34 @@ const SignupCard: React.FC<IAuthProps> =({session, request}) => {
             </FormControl>
               </Box>
             </HStack>
-            <FormControl id="password" isRequired>
-              <FormLabel>Password</FormLabel>
-              <InputGroup>
-                <Input 
-                bg={styles.inputField} 
-                focusBorderColor={styles.inputFieldFocus} 
-                type={showPassword ? "text" : "password"}
-                name="password"
-                value={userFormData.password}
-                onChange={handleInputChange}
-                 />
-                <InputRightElement h={"full"}>
-                  <Button
-                    variant={"ghost"}
-                    onClick={() =>
-                      setShowPassword((showPassword) => !showPassword)
-                    }
-                  >
-                    {showPassword ? <ViewIcon /> : <ViewOffIcon />}
-                  </Button>
-                </InputRightElement>
-              </InputGroup>
-            </FormControl>
+
+            {/* <Field name="password" validate={validatePassword}> */}
+                <FormControl id="password" isRequired>
+                <FormLabel>Password</FormLabel>
+                <InputGroup>
+                    <Input 
+                    bg={styles.inputField} 
+                    focusBorderColor={styles.inputFieldFocus} 
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    value={userFormData.password}
+                
+                    onChange={handleInputChange}
+                    />
+                    <InputRightElement h={"full"}>
+                    <Button
+                        variant={"ghost"}
+                        onClick={() =>
+                        setShowPassword((showPassword) => !showPassword)
+                        }
+                    >
+                        {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                    </Button>
+                    </InputRightElement>
+                </InputGroup>
+                </FormControl>
+            {/* </Field> */}
+
             <FormControl id="confirmPassword" isRequired>
               <FormLabel>Confirm Password</FormLabel>
               <InputGroup>
@@ -242,15 +269,21 @@ const SignupCard: React.FC<IAuthProps> =({session, request}) => {
             </Stack>
             <Stack pt={6}>
               <Text align={"center"}>
-                Already a user? <Link color={styles.link} _hover={styles.linkHover}>Login</Link>
+                Already a user? <Link 
+                as={NextLink}
+                href='/'
+                color={styles.link}
+                _hover={styles.linkHover}>Login</Link>
               </Text>
             </Stack>
           </Stack>
+          </form>
+
         </Box>
       </Stack>
     </Flex>
-    </Center>
 </motion.div>
+    </Center>
 
   );
 }
