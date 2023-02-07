@@ -19,6 +19,8 @@ latestMessage {
 }
 `;
 
+// TODO add body to lastestMessage.sender
+
 export default {
   Queries: {
     conversations: gql`

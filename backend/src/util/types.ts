@@ -73,9 +73,9 @@ export interface CreateConversationResponse {
 export interface Conversation {
     id: String;
     latestMessage: Message | null;
-    participants: Participant[] | null;
-    createdAt: ISODateString | null;
-    updatedAt: ISODateString | null;
+    participants: Participant[];
+    createdAt: number | ISODateString ;
+    updatedAt: number | ISODateString | any;
 }
 
 
@@ -83,15 +83,16 @@ export interface Conversation {
  *  Messages 
  * */ 
 export interface Message {
-    id: String | null;
-    sender: User | null;
+    id: String;
+    sender: User;
+    body: String | null;
 }
 
 /**
  *  Participants 
  * */ 
 export interface Participant {
-    id: String | null;
-    user: User | null;
-    hasSeenLatestMessage: boolean | null;
+    id: String;
+    user: User;
+    hasSeenLatestMessage: boolean;
 }

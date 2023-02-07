@@ -6,6 +6,8 @@ import { useQuery } from "@apollo/client";
 import { ConversationsData } from "../../../util/types";
 import { Conversation } from "../../../../../backend/src/util/types";
 import { useEffect } from "react";
+import { MdRouter } from "react-icons/md";
+import router from "next/router";
 
 interface ConversationWrapperProps {
   session: Session;
@@ -23,6 +25,11 @@ const ConversationWrapper: React.FC<ConversationWrapperProps> = ({
   } = useQuery<ConversationsData, null>(
     ConversationOperations.Queries.conversations
   );
+
+  const onViewConversation = async (conversationId: string) => {
+    // Push convoId to router query paramas
+   router.push({query: { conversationId}});
+  }
 
   const subscribeToNewConversations = () => {
     conversationsSubscribed({
@@ -63,6 +70,7 @@ const ConversationWrapper: React.FC<ConversationWrapperProps> = ({
       <ConversationList
         session={session}
         conversations={conversationsData?.conversations || []}
+        onViewConversation={onViewConversation}
       />
     </Box>
   );

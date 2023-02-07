@@ -60,6 +60,7 @@ model Message {
   updatedAt      DateTime @updatedAt
   conversationId String   @db.ObjectId
   senderId       String   @db.ObjectId
+  body           String
 
   isLatestIn   Conversation? @relation(name: "latestConversationMessage")
   conversation Conversation  @relation(fields: [conversationId], references: [id], onDelete: NoAction)

@@ -8,21 +8,24 @@ import { useQuery } from "@apollo/client";
 
 import ConversationItem from "./ConversationItem";
 import ConversationModal from "./Modals/ConversationModal";
+import { useRouter } from "next/router";
 
 interface ConversationListProps {
     session: Session;
     conversations: Array<any>;
+    onViewConversation: (conversationId: string) => void;
     // conversations: Array<ConversationsData> 
 }
 
-const ConversationList: React.FC<ConversationListProps> = ({ session, conversations }) => {
+const ConversationList: React.FC<ConversationListProps> = ({ session, conversations, onViewConversation }) => {
 
 
-       console.log('hey', conversations)
     const [isOpen, setIsOpen] = useState(false)
-
+    
     const onOpen = () => setIsOpen(true);
     const onClose = () => setIsOpen(false);
+    const router = useRouter();
+    const {user: { id: userId}} = session;
 
   return (
     <Box width='100%'>
@@ -42,7 +45,10 @@ const ConversationList: React.FC<ConversationListProps> = ({ session, conversati
         {conversations.map((conversation: any) => (
   <ConversationItem 
   key={conversation.id}
-  conversation={conversation} />
+  userId={userId}
+  conversation={conversation}
+  onClick={() => onViewConversation(conversation.id)}
+  isSelected={conversation.id === router.query.conversationId} />
 ))}
     </Box>
   )
