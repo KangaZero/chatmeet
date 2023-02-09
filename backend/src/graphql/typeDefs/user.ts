@@ -1,24 +1,24 @@
-import { gql } from "apollo-server-core";
-import { User } from "@prisma/client";
+// import { gql } from "apollo-server-core";
+// import { User } from "@prisma/client";
 
-const typeDefs = gql`
- type Query {
-     searchUsers(username: String): [SearchedUser]
-  }
+// const typeDefs = gql`
+//  type Query {
+//      searchUsers(username: String): [SearchedUser]
+//   }
 
-  type Mutation {
-    createUsername(username: String): CreateUsernameResponse
-  }
+//   type Mutation {
+//     createUsername(username: String): CreateUsernameResponse
+//   }
 
- type SearchedUser {
-    id: String
-    username: String
-  }
-  type CreateUsernameResponse {
-    success: Boolean
-    error: String
-  }
-`;
+//  type SearchedUser {
+//     id: String
+//     username: String
+//   }
+//   type CreateUsernameResponse {
+//     success: Boolean
+//     error: String
+//   }
+// `;
 
-export default typeDefs;
+// export default typeDefs;
 

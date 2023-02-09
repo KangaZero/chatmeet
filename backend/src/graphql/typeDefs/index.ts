@@ -1,8 +1,8 @@
-import userTypeDefs from "./user";
-import conversationTypeDefs from "./conversation";
+// import userTypeDefs from "./user";
+// import conversationTypeDefs from "./conversation";
 
 import merge from "lodash.merge";
-import { gql } from "apollo-server-express";
+import gql from 'graphql-tag';
 
 const typeDefs = gql`
     scalar Date
@@ -24,7 +24,6 @@ const typeDefs = gql`
     createUsername(username: String): CreateUsernameResponse
     createConversation(participantIds: [String]): CreateConversationResponse
   }
-
 
   type Message {
     id: String
