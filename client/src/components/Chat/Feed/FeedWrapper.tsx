@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { Box, Button, Center, Flex } from "@chakra-ui/react";
+import { Box, Button, Center, Flex, useColorModeValue } from "@chakra-ui/react";
 import { Session } from "next-auth"
 import { useRouter } from "next/router";
 import ConversationOperations from '../../../graphql/operations/conversation';
@@ -29,6 +29,8 @@ const FeedWrapper: React.FC<FeedWrapperProps> = ({session}) => {
       display={{base: conversationId ? 'flex' : 'none', md: 'flex'}}
       width='100%'
       direction='column'
+      bg={useColorModeValue('teal.50', 'whiteAlpha.50')}
+
       >
 
     {conversationId && typeof conversationId === 'string' ? (
@@ -37,6 +39,9 @@ const FeedWrapper: React.FC<FeedWrapperProps> = ({session}) => {
       justify="space-between"
       overflow="hidden"
       flexGrow={1}
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      bg={useColorModeValue('teal.50', 'gray.900')}
+
         >
         {/* {conversationId} */}
         <MessagesHeader userId={userId} conversationId={conversationId} />
