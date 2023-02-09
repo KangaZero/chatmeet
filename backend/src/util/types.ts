@@ -1,14 +1,35 @@
 import { ISODateString } from 'next-auth';
-import { PrismaClient } from '@prisma/client';
-
-
+import { Prisma, PrismaClient } from '@prisma/client';
+import { PubSub } from "graphql-subscriptions";
+import { Context } from "graphql-ws/lib/server";
+import {
+    conversationPopulated,
+    participantPopulated,
+  } from "../graphql/resolvers/conversation";
+/**
+ * Server Configuration
+ */
 export interface GraphQLContext {
     session: Session | null;
     prisma: PrismaClient;
-    // pubusub
+    pubsub: PubSub;
 }
 
-export interface User {
+
+export interface Session {
+    user?: User;
+    expires: ISODateString;
+}
+
+export interface SubscriptionContext extends Context {
+    connectionParams: {
+      session?: Session;
+    };
+  }
+/**
+ * Users
+ */
+  export interface User {
     id: string;
     username: string;
     email: string;
@@ -16,17 +37,62 @@ export interface User {
     image: string;
 
 }
-
-export interface Session {
-    user?: User;
-    expires: ISODateString;
-}
-
 export interface CreateUsernameResponse {
     success?: boolean;
     error?: string;
 }
 
+/**
+ * Conversations
+ */
+
+// export type ConversationPopulated = Prisma.ConversationGetPayload<{
+//     include: typeof conversationPopulated;
+//   }>;
+  
+//   export type ParticipantPopulated = Prisma.ConversationParticipantGetPayload<{
+//     include: typeof participantPopulated;
+//   }>;
+  
+//   export interface ConversationUpdatedSubscriptionPayload {
+//     conversationUpdated: {
+//       conversation: ConversationPopulated;
+//     };
+//   }
+  
+//   export interface ConversationDeletedSubscriptionPayload {
+//     conversationDeleted: ConversationPopulated;
+//   }
+  
+
 export interface CreateConversationResponse {
-    conversationId: string;
+    conversationId: string | null;
+}
+
+
+export interface Conversation {
+    id: String;
+    latestMessage: Message | null;
+    participants: Participant[];
+    createdAt: number | ISODateString ;
+    updatedAt: number | ISODateString | any;
+}
+
+
+/**
+ *  Messages 
+ * */ 
+export interface Message {
+    id: String;
+    sender: User;
+    body: String | null;
+}
+
+/**
+ *  Participants 
+ * */ 
+export interface Participant {
+    id: String;
+    user: User;
+    hasSeenLatestMessage: boolean;
 }

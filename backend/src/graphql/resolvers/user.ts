@@ -4,8 +4,6 @@ import { ApolloError } from 'apollo-server-core';
 import { User } from "@prisma/client";
 
 
-
-
 const resolvers = {
     Query: {
         searchUsers: async (

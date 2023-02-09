@@ -11,6 +11,7 @@ import Navbar from '../components/Navbar/Navbar';
 import theme from '../chakra/theme';
 
 
+
 export default function App({ Component, pageProps: { session, ...pageProps} }: AppProps) {
   return (
     <ApolloProvider client={client}>

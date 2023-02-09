@@ -1,3 +1,4 @@
+import { Conversation } from '../../../backend/src/util/types'
 
 export interface CreateUsernameData {
     createUsername: {
@@ -21,6 +22,15 @@ export interface SearchedUsers {
 
 export interface SearchUsersData {
     searchUsers: Array<SearchedUsers>
+}
+
+
+/**
+ *  Conversations 
+ * */ 
+export interface ConversationsData {
+    conversations: Array<Conversation>;
+
 }
 
 export interface CreateConversationData {
