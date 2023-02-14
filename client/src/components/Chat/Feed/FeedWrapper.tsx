@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import ConversationOperations from '../../../graphql/operations/conversation';
 import { ConversationsData } from "../../../util/types";
 import MessagesHeader from "./Messages/MessagesHeader";
+import MessagesInput from "./Messages/MessagesInput";
 
 
 
@@ -34,6 +35,7 @@ const FeedWrapper: React.FC<FeedWrapperProps> = ({session}) => {
       >
 
     {conversationId && typeof conversationId === 'string' ? (
+      <>
       <Flex
       direction="column"
       justify="space-between"
@@ -47,6 +49,8 @@ const FeedWrapper: React.FC<FeedWrapperProps> = ({session}) => {
         <MessagesHeader userId={userId} conversationId={conversationId} />
         {/* <Messages /> */}
         </Flex>
+        <MessagesInput session={session} conversationId={conversationId}/>
+        </>
     ) : (
       <Center>
         <h1>Currently no conversations selected</h1>
