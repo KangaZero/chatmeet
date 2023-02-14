@@ -46,23 +46,23 @@ export interface CreateUsernameResponse {
  * Conversations
  */
 
-// export type ConversationPopulated = Prisma.ConversationGetPayload<{
-//     include: typeof conversationPopulated;
-//   }>;
+export type ConversationPopulated = Prisma.ConversationGetPayload<{
+    include: typeof conversationPopulated;
+  }>;
   
-//   export type ParticipantPopulated = Prisma.ConversationParticipantGetPayload<{
-//     include: typeof participantPopulated;
-//   }>;
+  export type ParticipantPopulated = Prisma.ConversationParticipantGetPayload<{
+    include: typeof participantPopulated;
+  }>;
   
-//   export interface ConversationUpdatedSubscriptionPayload {
-//     conversationUpdated: {
-//       conversation: ConversationPopulated;
-//     };
-//   }
+  export interface ConversationUpdatedSubscriptionPayload {
+    conversationUpdated: {
+      conversation: ConversationPopulated;
+    };
+  }
   
-//   export interface ConversationDeletedSubscriptionPayload {
-//     conversationDeleted: ConversationPopulated;
-//   }
+  export interface ConversationDeletedSubscriptionPayload {
+    conversationDeleted: ConversationPopulated;
+  }
   
 
 export interface CreateConversationResponse {
@@ -88,6 +88,16 @@ export interface Message {
     body: String | null;
 }
 
+export interface SendMessageArguments {
+    id: string;
+    conversationId: string;
+    senderId: string;
+    body: string;
+}
+
+export interface MessageSentSubsciptionPayload {
+    messageSent: Message;
+}
 /**
  *  Participants 
  * */ 

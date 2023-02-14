@@ -2,7 +2,7 @@
 // import conversationTypeDefs from "./conversation";
 
 import merge from "lodash.merge";
-import gql from 'graphql-tag';
+import gql from "graphql-tag";
 
 const typeDefs = gql`
     scalar Date
@@ -16,6 +16,14 @@ const typeDefs = gql`
     conversations: [Conversation]
   }
 
+  type Query{
+    messages(conversationId: String): [Message]
+  }
+
+  type Subscription{
+    messageSent(conversationId: String): Message
+  }
+
   type Subscription{
     conversationCreated: Conversation
   }
@@ -23,6 +31,12 @@ const typeDefs = gql`
   type Mutation {
     createUsername(username: String): CreateUsernameResponse
     createConversation(participantIds: [String]): CreateConversationResponse
+    sendMessage(
+      id: String,
+       conversationId: String, 
+       senderId: String,
+       body: String
+       ): Boolean
   }
 
   type Message {
