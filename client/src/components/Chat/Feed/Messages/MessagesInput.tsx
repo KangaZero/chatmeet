@@ -9,7 +9,7 @@ interface MesssageInputProps {
     conversationId: string;
 }
 
-const MessageInput = ({ session, conversationId }: MesssageInputProps) => {
+const MessageInput:React.FC<MesssageInputProps> = ({ session, conversationId }) => {
    
     const [messageBody, setMessageBody] = useState('');
 
@@ -17,20 +17,7 @@ const MessageInput = ({ session, conversationId }: MesssageInputProps) => {
         e.preventDefault();
 
         try {
-            const response = await fetch('/api/messages', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    messageBody,
-                    conversationId,
-                    userId: session.user.id,
-                }),
-            });
-
-            const data = await response.json();
-            console.log('data', data);
+            
         } catch (error: any) {
             console.error('onSendMessage error', error);
             toast.error(error?.message || 'Something went wrong!');

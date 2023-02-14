@@ -91,14 +91,7 @@ const resolvers = {
             conversationId,
             body,
           },
-          include: {
-            sender: {
-              select: {
-                id: true,
-                username: true,
-              },
-            },
-          },
+          include: messagePopulated
         });
 
         const conversationUpdated = await prisma.conversation.update({
@@ -172,7 +165,13 @@ const resolvers = {
   },
 };
 
-// export const messagePopulated = 
-//   Prisma.validator<Prisma.MessageArgs>()({
+export const messagePopulated = Prisma.validator<Prisma.MessageInclude>()({
+    sender: {
+      select: {
+        id: true,
+        username: true,
+      },
+    },
+  });
 
 export default resolvers;

@@ -4,6 +4,7 @@ import { Session } from "next-auth"
 import { useRouter } from "next/router";
 import ConversationOperations from '../../../graphql/operations/conversation';
 import { ConversationsData } from "../../../util/types";
+import Messages from "./Messages/Messages";
 import MessagesHeader from "./Messages/MessagesHeader";
 import MessagesInput from "./Messages/MessagesInput";
 
@@ -47,7 +48,7 @@ const FeedWrapper: React.FC<FeedWrapperProps> = ({session}) => {
         >
         {/* {conversationId} */}
         <MessagesHeader userId={userId} conversationId={conversationId} />
-        {/* <Messages /> */}
+        <Messages  userId={userId} conversationId={conversationId} />
         </Flex>
         <MessagesInput session={session} conversationId={conversationId}/>
         </>

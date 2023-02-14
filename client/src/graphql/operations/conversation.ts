@@ -1,5 +1,6 @@
 /* eslint-disable import/no-anonymous-default-export */
 import { gql } from "@apollo/client";
+import {MessageFields} from "./message";
 
 const ConversationFields = `
 id
@@ -12,14 +13,10 @@ participants {
   hasSeenLatestMessage
 }
 latestMessage {
-  sender{
-      id
-      username
-  }
+  ${MessageFields}
 }
 `;
 
-// TODO add body to lastestMessage.sender
 
 export default {
   Queries: {

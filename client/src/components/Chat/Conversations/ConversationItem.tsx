@@ -82,7 +82,7 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
 
   const [menuOpen, setMenuOpen] = useState(false);
 
-  console.log('conversationITME', conversation)
+  // console.log('conversationITME', conversation)
 
   const conversationUpdatedAt = conversation.updatedAt
   console.log(conversationUpdatedAt)
