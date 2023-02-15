@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/rules-of-hooks */
+
 import { useQuery } from "@apollo/client";
 import { Button, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 import { useRouter } from "next/router";
@@ -14,6 +14,24 @@ export interface MessagesHeaderProps {
 }
 
 const MessagesHeader = ({ userId, conversationId }: MessagesHeaderProps): JSX.Element | undefined | any=> {
+  const styles = {
+    // (light, dark)
+    cardBg: useColorModeValue('teal.50', 'whiteAlpha.50'),
+    inputField: useColorModeValue('cyan.100', 'gray.700'),
+    inputFieldFocus: useColorModeValue('orange.50','blackAlpha.300'),
+    text: useColorModeValue('teal.900','yellow.50'),
+    title: useColorModeValue('teal.900','yellow.50'),
+    border: useColorModeValue('teal.900', 'yellow.50'),
+    button: useColorModeValue('yellow.50', 'teal.900'),
+    link: useColorModeValue('blue.500', 'blue.600'),
+    linkHover: {color: useColorModeValue('blue.300', 'blue.700')},
+    buttonHoverBg: {bg: useColorModeValue('teal.200', 'teal.700')},
+    googleButtonBg: useColorModeValue('blue.200', 'blue.600'),
+    googleButtonHoverBg:{bg:useColorModeValue('blue.500','blue.800')},
+    facebookButtonBg: useColorModeValue('gray.300', 'gray.600'),
+    facebookButtonHoverBg:{bg:useColorModeValue('gray.500','gray.800')}
+};
+ 
   const router = useRouter();
   const { data, loading } = useQuery<ConversationsData, any>(
     ConversationOperations.Queries.conversations
@@ -33,26 +51,10 @@ const MessagesHeader = ({ userId, conversationId }: MessagesHeaderProps): JSX.El
       id: p.user.id,
       username: p.user.username,
     }));
-    console.log('participants: ', participants)
+    // console.log('participants: ', participants)
     const usernames = formatUsernames(participants, userId);
 
-  const styles = {
-    // (light, dark)
-    cardBg: useColorModeValue('teal.50', 'whiteAlpha.50'),
-    inputField: useColorModeValue('cyan.100', 'gray.700'),
-    inputFieldFocus: useColorModeValue('orange.50','blackAlpha.300'),
-    text: useColorModeValue('teal.900','yellow.50'),
-    title: useColorModeValue('teal.900','yellow.50'),
-    border: useColorModeValue('teal.900', 'yellow.50'),
-    button: useColorModeValue('yellow.50', 'teal.900'),
-    link: useColorModeValue('blue.500', 'blue.600'),
-    linkHover: {color: useColorModeValue('blue.300', 'blue.700')},
-    buttonHoverBg: {bg: useColorModeValue('teal.200', 'teal.700')},
-    googleButtonBg: useColorModeValue('blue.200', 'blue.600'),
-    googleButtonHoverBg:{bg:useColorModeValue('blue.500','blue.800')},
-    facebookButtonBg: useColorModeValue('gray.300', 'gray.600'),
-    facebookButtonHoverBg:{bg:useColorModeValue('gray.500','gray.800')}
-} 
+  
 
   return (
     <Stack
