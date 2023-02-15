@@ -30,9 +30,10 @@ const MessagesHeader = ({ userId, conversationId }: MessagesHeaderProps): JSX.El
 
   if (conversation && conversation.participants) {
     const participants: Participant[] = conversation.participants.map(p => ({
-      id: p.id,
+      id: p.user.id,
       username: p.user.username,
     }));
+    console.log('participants: ', participants)
     const usernames = formatUsernames(participants, userId);
 
   const styles = {

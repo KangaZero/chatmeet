@@ -17,9 +17,10 @@ export const formatUsernames = (
     myUserId: string
 ): string => {
     const usernames = participants
-        .filter((participant) => participant.user?.id !== myUserId)
-        .map((participant) => participant.user?.username);
+        .filter((participant) => participant.id !== myUserId)
+        .map((participant) => participant.username);
 
+        console.log(usernames, 'formatUsername')
         return usernames.join(", ");
 }
 export const formatDate = (dateString: string): string => {
