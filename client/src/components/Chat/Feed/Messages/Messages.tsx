@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { MessagesData, MessagesVariables } from "../../../../util/types";
 import Messageoperations from "../../../../graphql/operations/message";
 import toast from "react-hot-toast";
+import SkeletonLoader from "../../../common/SkeletonLoader";
 
 
 interface MessagesProps {
@@ -28,7 +29,12 @@ const Messages: React.FC<MessagesProps> = ({ userId, conversationId }) => {
         }
     )
 
-    console.log("messages", data)
+    if (error) {
+        console.error(error)
+        return null;
+    }
+
+    // console.log("messages", data?.messages)
 
     return (
         <Flex
@@ -37,14 +43,14 @@ const Messages: React.FC<MessagesProps> = ({ userId, conversationId }) => {
         overflow='hidden'
         >
             {loading && (
-                <Stack>
-                    <h1>Loading...</h1>   
+                <Stack spacing={4} px={3}>
+                    <SkeletonLoader count={8} height='50px' width='270px' />
                 </Stack>
             )}
             {data?.messages && (
                 <Flex
                 direction="column-reverse"
-                overflow="scroll"
+                overflow="auto"
                 height="100%"
                 >
                     {data.messages.map(message => (

@@ -35,12 +35,13 @@ interface IAuthProps {
     request: NextRequest;
 }
 
-const SignupCard: React.FC<IAuthProps> =({session, request}) => {
+const SignupCard =({session, request}: IAuthProps): JSX.Element | null=> {
 
     if (session?.user) {
         const url = request.nextUrl.clone()
         url.pathname = '/'
-        return NextResponse.redirect(url)  
+        NextResponse.redirect(url)  
+        return null
     }
 
   const [showPassword, setShowPassword] = useState(false);

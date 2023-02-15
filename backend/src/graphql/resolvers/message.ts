@@ -94,6 +94,17 @@ const resolvers = {
           include: messagePopulated
         });
 
+        const participant = await prisma.conversationParticipant.findFirst({
+            where: {
+                conversationId,
+                userId
+            }
+        });
+
+        if(!participant) {
+            throw new GraphQLError("No participant found");
+        }
+
         const conversationUpdated = await prisma.conversation.update({
           where: {
             id: conversationId,
@@ -103,7 +114,7 @@ const resolvers = {
             participants: {
               update: {
                 where: {
-                  id: senderId,
+                  id: participant?.id,
                 },
                 data: {
                   hasSeenLatestMessage: true,
@@ -112,7 +123,7 @@ const resolvers = {
               updateMany: {
                 where: {
                   NOT: {
-                    userId: senderId,
+                    userId,
                   },
                 },
                 data: {
@@ -121,6 +132,7 @@ const resolvers = {
               },
             },
           },
+          include: conversationPopulated,
         });
 
         pubsub.publish(`MESSAGE_SENT`, {

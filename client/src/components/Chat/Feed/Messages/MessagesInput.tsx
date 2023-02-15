@@ -1,8 +1,12 @@
 
-import { Box, Input, useColorModeValue } from "@chakra-ui/react";
+import { useMutation } from "@apollo/client";
 import { Session } from "next-auth";
 import { useState } from "react";
+import { Box, Input, useColorModeValue } from "@chakra-ui/react";
 import toast from "react-hot-toast";
+import { SendMessageArguments } from "../../../../../../backend/src/util/types";
+import MessageOperations from "../../../../graphql/operations/message";
+import { ObjectId } from "bson";
 
 interface MesssageInputProps {
     session: Session;
@@ -12,12 +16,31 @@ interface MesssageInputProps {
 const MessageInput:React.FC<MesssageInputProps> = ({ session, conversationId }) => {
    
     const [messageBody, setMessageBody] = useState('');
+    const [sendMessage] = useMutation<{ sendMessage: boolean }, SendMessageArguments>(MessageOperations.Mutations.sendMessage)
 
     const onSendMessage = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        
         try {
-            
+            const {id: senderId} = session.user;
+            const messageId = new ObjectId().toString();
+            const newMessage: SendMessageArguments = {
+                id: messageId,
+                senderId,
+                conversationId,
+                body: messageBody,
+            };
+           const {data, errors} = await sendMessage({variables: {...newMessage}});
+
+           console.log('messageinputdata', data)
+
+           if (!data?.sendMessage || errors) {
+                throw new Error('Something went wrong!');
+            }
+
+            setMessageBody('');
+
         } catch (error: any) {
             console.error('onSendMessage error', error);
             toast.error(error?.message || 'Something went wrong!');
@@ -49,8 +72,9 @@ const MessageInput:React.FC<MesssageInputProps> = ({ session, conversationId }) 
         py={6}
         width='100%'
         backgroundColor = {styles.cardBg}
+        overflow='hidden'
         >
-            <form onSubmit={(e) => {}}>
+            <form onSubmit={onSendMessage}>
                 <Input 
                 border="1px solid"
                 borderColor={styles.border}

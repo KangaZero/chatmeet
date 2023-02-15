@@ -20,7 +20,7 @@ import { Conversation } from "../../../../../backend/src/util/types"
 
 
 type ConversationItemProps = {
-    conversation: Conversation
+  conversation: Conversation
   userId: string;
   onClick: () => void;
   isSelected: boolean;

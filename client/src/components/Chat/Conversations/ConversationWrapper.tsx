@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { MdRouter } from "react-icons/md";
 import router from "next/router";
 import { useRouter } from 'next/router';
+import SkeletonLoader from "../../common/SkeletonLoader";
 
 interface ConversationWrapperProps {
   session: Session;
@@ -23,7 +24,7 @@ const ConversationWrapper: React.FC<ConversationWrapperProps> = ({
     error: conversationsError,
     subscribeToMore: conversationsSubscribed,
     // 1st is the data we get, 2nd is what we inputed
-  } = useQuery<ConversationsData, null>(
+  } = useQuery<ConversationsData, any>(
     ConversationOperations.Queries.conversations
   );
 
@@ -72,13 +73,23 @@ const ConversationWrapper: React.FC<ConversationWrapperProps> = ({
   return (
     <Box 
     display={{base: conversationId ? 'none' : 'flex', md: 'flex'}}
-    width={{ base: "100%", md: "400px" }} bg={useColorModeValue('blue.100','gray.800')} py={6} px={3}>
-      {/* Add skeleton */}
-      <ConversationList
+    flexDirection='column'
+    width={{ base: "100%", md: "400px" }} bg={useColorModeValue('blue.100','gray.800')} 
+    overflowY='auto'
+    gap={4} py={6} px={3}>
+     
+      {conversationsLoading ? (
+        <SkeletonLoader count={8} height='50px' width='270px' />
+      ) : (
+        <ConversationList
         session={session}
         conversations={conversationsData?.conversations || []}
         onViewConversation={onViewConversation}
       />
+      )
+      }
+
+      
     </Box>
   );
 };

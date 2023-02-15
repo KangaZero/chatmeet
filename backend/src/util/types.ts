@@ -110,6 +110,7 @@ export type MessagePopulated = Prisma.MessageGetPayload<{
  * */ 
 export interface Participant {
     id: String;
-    user: User;
-    hasSeenLatestMessage: boolean;
+    username: string | null;
+    user?: User;
+    // hasSeenLatestMessage: boolean;
 }
