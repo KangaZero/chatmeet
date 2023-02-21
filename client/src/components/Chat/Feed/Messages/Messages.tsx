@@ -1,10 +1,11 @@
 import { useQuery } from "@apollo/client";
 import { Flex, Stack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { MessagesData, MessagesVariables } from "../../../../util/types";
-import Messageoperations from "../../../../graphql/operations/message";
+import { MessagesData, MessagesSubscriptionData, MessagesVariables } from "../../../../util/types";
+import MessageOperations from "../../../../graphql/operations/message";
 import toast from "react-hot-toast";
 import SkeletonLoader from "../../../common/SkeletonLoader";
+import { useEffect, useRef } from "react";
 
 
 interface MessagesProps {
@@ -12,10 +13,10 @@ interface MessagesProps {
     conversationId: string; 
 }
 
-const Messages: React.FC<MessagesProps> = ({ userId, conversationId }) => {
+const Messages: React.FC<MessagesProps> = ({ userId, conversationId }): any=> {
 
-    const { data, loading, error } = useQuery<MessagesData, MessagesVariables>(
-        Messageoperations.Queries.messages,
+    const { data, loading, error, subscribeToMore } = useQuery<MessagesData, MessagesVariables>(
+        MessageOperations.Queries.messages,
         {
             variables: {
                 conversationId
@@ -23,18 +24,53 @@ const Messages: React.FC<MessagesProps> = ({ userId, conversationId }) => {
             onError: ({ message }) => {
                 toast.error(message)
             },
-            onCompleted: () => {
-                console.log('completed')
-            }
+            // onCompleted: () => {
+            //     console.log('completed')
+            // }
         }
     )
 
-    if (error) {
-        console.error(error)
-        return null;
-    }
+    // if (error) {
+    //     console.error(error)
+    //     return null;
+    // }
 
-    // console.log("messages", data?.messages)
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+
+    const subscribeToMoreMessages = (conversationId: string) => {
+        subscribeToMore({
+            document: MessageOperations.Subscriptions.messageSent,
+            variables: {
+                conversationId
+            },
+            updateQuery: ( prev, { subscriptionData }: MessagesSubscriptionData) => {
+                if (!subscriptionData.data) {
+                    return prev;
+                }
+                console.log('subscriptionData', subscriptionData)
+
+                const newMessage = subscriptionData.data.messageSent;
+
+                return Object.assign({}, prev, {
+                    messages: [newMessage, ...prev.messages],
+                });
+            },
+        });
+    }
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        useEffect(() => {
+             subscribeToMoreMessages(conversationId);
+
+        }, [conversationId]);
+
+        // useEffect(() => {
+        //     if (!messagesEndRef.current || !data) return;
+        //     messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+        //   }, [data, messagesEndRef.current]);
+        
+        
+    console.log("messages", data)
 
     return (
         <Flex
@@ -55,10 +91,11 @@ const Messages: React.FC<MessagesProps> = ({ userId, conversationId }) => {
                 >
                     {data.messages.map(message => (
                         <Stack
+                        border='1px solid black'
                         key={message.id}
                         direction={message.senderId === userId ? 'row-reverse' : 'row'}
                         >
-                            {/* <h1>{message.senderId}</h1> */}
+                            <h1>{message.senderId}</h1>
                             <h1>{message.body}</h1>
                         </Stack>
                     ))}
@@ -68,4 +105,5 @@ const Messages: React.FC<MessagesProps> = ({ userId, conversationId }) => {
     )
 }
 
-export default Messages;
+
+export default Messages

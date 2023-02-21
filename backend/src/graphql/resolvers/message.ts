@@ -1,6 +1,7 @@
 import {
   GraphQLContext,
   MessageSentSubsciptionPayload,
+  MessagePopulated,
   SendMessageArguments,
 } from "../../util/types";
 import { conversationPopulated } from "./conversation";
@@ -44,23 +45,16 @@ const resolvers = {
           where: {
             conversationId,
           },
-          include: {
-            sender: {
-              select: {
-                id: true,
-                username: true,
-              },
-            },
-          },
+          include: messagePopulated,
           orderBy: {
             createdAt: "desc",
-          }
+          },
         });
 
         return messages;
       } catch (error: any) {
         console.error("messages error", error);
-        return [];
+        throw new GraphQLError(error?.message);
       }
     },
   },
@@ -96,14 +90,16 @@ const resolvers = {
 
         const participant = await prisma.conversationParticipant.findFirst({
             where: {
+                userId,
                 conversationId,
-                userId
             }
         });
 
         if(!participant) {
             throw new GraphQLError("No participant found");
         }
+
+        const { id: participantId } = participant;
 
         const conversationUpdated = await prisma.conversation.update({
           where: {
@@ -114,7 +110,7 @@ const resolvers = {
             participants: {
               update: {
                 where: {
-                  id: participant?.id,
+                  id: participantId,
                 },
                 data: {
                   hasSeenLatestMessage: true,
@@ -139,14 +135,14 @@ const resolvers = {
           messageSent: newMessage,
         });
 
-        // pubsub.publish(`CONVERSATION_UPDATED`, {
-        //     conversationUpdated
-        // })
+        pubsub.publish(`CONVERSATION_UPDATED`, {
+            conversationUpdated
+        })
 
         return true;
       } catch (error: any) {
         console.error("sendMessage error", error);
-        return false;
+        throw new GraphQLError("Error sending message");
       }
     },
   },
@@ -156,15 +152,10 @@ const resolvers = {
         (_: any, __: any, context: GraphQLContext) => {
           const { pubsub } = context;
 
-          try {
-            return pubsub.asyncIterator(["MESSAGE_SENT"]);
-          } catch (error: any) {
-            console.error("messageSent error", error);
-            throw new GraphQLError(error);
-          }
+          return pubsub.asyncIterator(["MESSAGE_SENT"]);
         },
         (
-          payload,
+          payload: MessageSentSubsciptionPayload,
           args: { conversationId: string },
           context: GraphQLContext
         ) => {

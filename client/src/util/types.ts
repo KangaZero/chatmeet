@@ -46,13 +46,13 @@ export interface MessagesData {
 //     body: string;
 //   }
   
-//   export interface MessagesSubscriptionData {
-//     subscriptionData: {
-//       data: {
-//         messageSent: MessagePopulated;
-//       };
-//     };
-//   }
+  export interface MessagesSubscriptionData {
+    subscriptionData: {
+      data: {
+        messageSent: MessagePopulated;
+      };
+    };
+  }
 
 /**
  *  Conversations 

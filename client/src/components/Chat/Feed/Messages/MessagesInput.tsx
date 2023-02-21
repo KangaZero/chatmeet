@@ -87,7 +87,6 @@ const MessageInput:React.FC<MesssageInputProps> = ({ session, conversationId }) 
                 onChange={(e) => setMessageBody(e.target.value)} />
                 
             </form>
-            Here
         </Box>
     );
 };

@@ -13,7 +13,7 @@ export interface MessagesHeaderProps {
   conversationId: string;
 }
 
-const MessagesHeader = ({ userId, conversationId }: MessagesHeaderProps): JSX.Element | undefined | any=> {
+const MessagesHeader = ({ userId, conversationId }: MessagesHeaderProps): JSX.Element | undefined | any => {
   const styles = {
     // (light, dark)
     cardBg: useColorModeValue('teal.50', 'whiteAlpha.50'),

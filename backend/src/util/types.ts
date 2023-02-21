@@ -42,6 +42,10 @@ export interface CreateUsernameResponse {
     success?: boolean;
     error?: string;
 }
+export interface CreateUserResponse {
+    success?: boolean;
+    error?: string;
+}
 
 /**
  * Conversations
