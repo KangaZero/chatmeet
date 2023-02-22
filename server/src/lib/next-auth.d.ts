@@ -1,14 +1,16 @@
-import "next-auth";
-declare module "next-auth" {
-  /**
-   * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
-   */
-  interface Session {
-    user: User;
-  }
+// import 'next-auth';
 
-  interface User {
-    id: string;
-    username: string;
-  }
-}
+// declare module 'next-auth' {
+
+//     // Adds upon the default User
+//     interface User {
+//         id: string;
+//         username: string;
+//         image: string;
+//     }
+//     // Uses our custom User module
+//     interface Session {
+//         user: User;
+//     }
+    
+// }

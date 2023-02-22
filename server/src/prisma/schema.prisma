@@ -1,34 +1,74 @@
 datasource db {
   provider = "mongodb"
   url      = env("MONGODB_URI")
+  //   shadowDatabaseUrl = env("SHADOW_DATABASE_URL") // Only needed when using a cloud provider that doesn't support the creation of new databases, like Heroku. Learn more: https://pris.ly/migrate-shadow
 }
 
 generator client {
-  provider        = "prisma-client-js"
-  binaryTargets   = ["native", "darwin", "darwin-arm64"]
+  provider = "prisma-client-js"
+  //   binaryTargets   = ["native", "darwin", "darwin-arm64"] // Need for M1 Macs on Backend
+  //   previewFeatures = ["referentialActions"] // You won't need this in Prisma 3.X or higher.
 }
 
 model Account {
-  id  String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId             String   @db.ObjectId
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.String
-  access_token       String?  @db.String
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.String
-  session_state      String?
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
 
+model Conversation {
+  id              String                    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt       DateTime                  @default(now())
+  updatedAt       DateTime                  @updatedAt
+  latestMessageId String?                    @unique @db.ObjectId
+  participants    ConversationParticipant[]
+  messages        Message[]
+
+  latestMessage Message? @relation(name: "latestConversationMessage", fields: [latestMessageId], references: [id], onUpdate: NoAction, onDelete: NoAction)
+}
+
+// references model to create many to many relationship 
+// user => convoParti <= Convo
+model ConversationParticipant {
+  id                   String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId               String  @db.ObjectId
+  conversationId       String  @db.ObjectId
+  hasSeenLatestMessage Boolean
+
+  user         User         @relation(fields: [userId], references: [id])
+  conversation Conversation @relation(fields: [conversationId], references: [id])
+}
+
+// Message belongs to one Conversation, but Conversation has many messages
+// Message belongs to one User, but User has many messages
+model Message {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  conversationId String   @db.ObjectId
+  senderId       String   @db.ObjectId
+  body           String
+
+  isLatestIn   Conversation? @relation(name: "latestConversationMessage")
+  conversation Conversation  @relation(fields: [conversationId], references: [id], onDelete: NoAction)
+  sender       User          @relation(fields: [senderId], references: [id])
+}
+
 model Session {
-  id  String  @id @default(auto()) @map("_id") @db.ObjectId
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
   sessionToken String   @unique
   userId       String   @db.ObjectId
   expires      DateTime
@@ -36,56 +76,23 @@ model Session {
 }
 
 model User {
-  id  String  @id @default(auto()) @map("_id") @db.ObjectId
+  id            String                    @id @default(auto()) @map("_id") @db.ObjectId
   name          String?
-  email         String?   @unique
-  username      String?   @unique
-  conversations ConversationParticipant[]
-  messages      Message[]
+  email         String?                   @unique
+  username      String?                   @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
+  conversations ConversationParticipant[]
+  messages      Message[]
 }
 
 model VerificationToken {
-  id  String  @id @default(auto()) @map("_id") @db.ObjectId
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
   identifier String
   token      String   @unique
   expires    DateTime
 
   @@unique([identifier, token])
-}
-
-model Conversation {
-  id              String  @id @default(auto()) @map("_id") @db.ObjectId
-  messages        Message[]
-  participants    ConversationParticipant[]
-  latestMessageId String? @unique  @db.ObjectId
-  latestMessage   Message?  @relation(name: "latestConversationMessage", fields: [latestMessageId], references: [id], onUpdate: NoAction, onDelete: NoAction)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-}
-
-model ConversationParticipant {
-  id                   String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId               String  @db.ObjectId
-  user                 User   @relation(fields: [userId], references: [id])
-  conversationId       String  @db.ObjectId
-  conversation         Conversation @relation(fields: [conversationId], references: [id])
-  hasSeenLatestMessage Boolean
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
-}
-
-model Message {
-  id               String  @id @default(auto()) @map("_id") @db.ObjectId
-  conversationId   String  @db.ObjectId
-  conversation     Conversation @relation(fields: [conversationId], references: [id])
-  senderId         String  @db.ObjectId
-  sender           User     @relation(fields: [senderId], references: [id])
-  body             String
-  isLatestIn       Conversation? @relation(name: "latestConversationMessage")
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
 }

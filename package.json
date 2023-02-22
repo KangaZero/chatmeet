@@ -1,0 +1,25 @@
+{
+  "name": "chatmeet",
+  "version": "1.0.0",
+  "description": "A real-time chat app",
+  "main": "server/src/index.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KangaZero/chatmeet.git"
+  },
+  "scripts": {
+    "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm run dev\"",
+    "install": "cd server && npm i && cd ../client && npm i",
+    "build": "cd client && npm run build"
+  },
+  "keywords": [],
+  "author": "Samuel Wai Weng Yong",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KangaZero/chatmeet/issues"
+  },
+  "homepage": "https://github.com/KangaZero/chatmeet#readme",
+  "dependencies": {
+    "concurrently": "^7.6.0"
+  }
+}

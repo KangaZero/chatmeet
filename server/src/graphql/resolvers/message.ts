@@ -1,55 +1,44 @@
-import { Prisma } from "@prisma/client";
-import { GraphQLError } from "graphql";
-import { withFilter } from "graphql-subscriptions";
 import {
   GraphQLContext,
+  MessageSentSubsciptionPayload,
   MessagePopulated,
-  MessageSentSubscriptionPayload,
   SendMessageArguments,
-} from "../../utils/types";
-import { userIsConversationParticipant } from '../../utils/functions';
+} from "../../util/types";
 import { conversationPopulated } from "./conversation";
+import { GraphQLError } from "graphql";
+import { Prisma } from "@prisma/client";
+import { withFilter } from "graphql-subscriptions";
+import { userIsConversationParticipant } from "../../util/functions";
 
 const resolvers = {
   Query: {
-    messages: async function (
-      _: any,
-      args: { conversationId: string },
-      context: GraphQLContext
-    ): Promise<Array<MessagePopulated>> {
-      const { session, prisma } = context;
+    messages: async ( _: any, args: { conversationId: string }, ctx: GraphQLContext): Promise<Prisma.MessageGetPayload<null>[]> => {
+      const { prisma, session } = ctx;
       const { conversationId } = args;
 
       if (!session?.user) {
-        throw new GraphQLError("Not authorized");
+        throw new GraphQLError("Not authorised");
       }
 
-      const {
-        user: { id: userId },
-      } = session;
+      const { id: userId } = session?.user;
 
-      /**
-       * Verify that conversation exists & user is a participant
-       */
+
       const conversation = await prisma.conversation.findUnique({
         where: {
-          id: conversationId,
-        },
-        include: conversationPopulated,
+            id: conversationId,
+        }, 
+        include: conversationPopulated
       });
 
       if (!conversation) {
-        throw new GraphQLError("Conversation Not Found");
-      }
+        throw new GraphQLError("No conversation found");
+        }
 
-      const allowedToView = userIsConversationParticipant(
-        conversation.participants,
-        userId
-      );
+        const allowedToView = userIsConversationParticipant(conversation.participants, userId);
 
-      if (!allowedToView) {
-        throw new GraphQLError("Not Authorized");
-      }
+        if (!allowedToView) {
+            throw new GraphQLError("Not authorised");
+        }
 
       try {
         const messages = await prisma.message.findMany({
@@ -64,36 +53,31 @@ const resolvers = {
 
         return messages;
       } catch (error: any) {
-        console.log("messages error", error);
+        console.error("messages error", error);
         throw new GraphQLError(error?.message);
       }
     },
   },
   Mutation: {
-    sendMessage: async function (
+    sendMessage: async (
       _: any,
       args: SendMessageArguments,
-      context: GraphQLContext
-    ): Promise<boolean> {
-      const { session, prisma, pubsub } = context;
-      const { id: messageId, senderId, conversationId, body } = args;
+      ctx: GraphQLContext
+    ): Promise<boolean> => {
+      const { prisma, session, pubsub } = ctx;
 
       if (!session?.user) {
-        throw new GraphQLError("Not authorized");
+        throw new GraphQLError("Not authorised");
       }
 
-      const { id: userId } = session.user;
+      const { id: userId } = session?.user;
+      const { id: messageId, senderId, conversationId, body } = args;
 
       if (userId !== senderId) {
-        throw new GraphQLError("Not authorized");
+        throw new GraphQLError("Not authorised");
       }
 
-      console.log("HERE IS DATA", args);
-
       try {
-        /**
-         * Create new message entity
-         */
         const newMessage = await prisma.message.create({
           data: {
             id: messageId,
@@ -101,32 +85,23 @@ const resolvers = {
             conversationId,
             body,
           },
-          include: messagePopulated,
+          include: messagePopulated
         });
 
-        /**
-         * Find ConversationParticipant entity
-         */
         const participant = await prisma.conversationParticipant.findFirst({
-          where: {
-            userId,
-            conversationId,
-          },
+            where: {
+                userId,
+                conversationId,
+            }
         });
 
-        /**
-         * Should always exist
-         */
-        if (!participant) {
-          throw new GraphQLError("Participant does not exist");
+        if(!participant) {
+            throw new GraphQLError("No participant found");
         }
 
-        console.log("HERE IS PARTICIPANT", participant);
+        const { id: participantId } = participant;
 
-        /**
-         * Update conversation entity
-         */
-        const conversation = await prisma.conversation.update({
+        const conversationUpdated = await prisma.conversation.update({
           where: {
             id: conversationId,
           },
@@ -135,7 +110,7 @@ const resolvers = {
             participants: {
               update: {
                 where: {
-                  id: participant.id,
+                  id: participantId,
                 },
                 data: {
                   hasSeenLatestMessage: true,
@@ -156,18 +131,19 @@ const resolvers = {
           include: conversationPopulated,
         });
 
-        pubsub.publish("MESSAGE_SENT", { messageSent: newMessage });
-        pubsub.publish("CONVERSATION_UPDATED", {
-          conversationUpdated: {
-            conversation,
-          },
+        pubsub.publish(`MESSAGE_SENT`, {
+          messageSent: newMessage,
         });
-      } catch (error) {
-        console.log("sendMessage error", error);
+
+        pubsub.publish(`CONVERSATION_UPDATED`, {
+            conversationUpdated
+        })
+
+        return true;
+      } catch (error: any) {
+        console.error("sendMessage error", error);
         throw new GraphQLError("Error sending message");
       }
-
-      return true;
     },
   },
   Subscription: {
@@ -175,14 +151,17 @@ const resolvers = {
       subscribe: withFilter(
         (_: any, __: any, context: GraphQLContext) => {
           const { pubsub } = context;
+
           return pubsub.asyncIterator(["MESSAGE_SENT"]);
         },
         (
-          payload: MessageSentSubscriptionPayload,
+          payload: MessageSentSubsciptionPayload,
           args: { conversationId: string },
           context: GraphQLContext
         ) => {
           return payload.messageSent.conversationId === args.conversationId;
+          // const { session } = context;
+          // const { messageSent} = payload;
         }
       ),
     },
@@ -190,12 +169,12 @@ const resolvers = {
 };
 
 export const messagePopulated = Prisma.validator<Prisma.MessageInclude>()({
-  sender: {
-    select: {
-      id: true,
-      username: true,
+    sender: {
+      select: {
+        id: true,
+        username: true,
+      },
     },
-  },
-});
+  });
 
 export default resolvers;
