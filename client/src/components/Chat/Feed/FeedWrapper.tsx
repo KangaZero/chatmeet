@@ -4,12 +4,14 @@ import { Session } from "next-auth"
 import { useRouter } from "next/router";
 import ConversationOperations from '../../../graphql/operations/conversation';
 import { ConversationsData } from "../../../util/types";
-import MessagesHeader from "./Messages/MessagesHeader";
+import Messages from "./Messages/Messages";
+import MessagesHeader, { MessagesHeaderProps } from "./Messages/MessagesHeader";
+import MessagesInput from "./Messages/MessagesInput";
 
 
 
 interface FeedWrapperProps {
-    session: Session
+    session: Session;
 }
 
 const FeedWrapper: React.FC<FeedWrapperProps> = ({session}) => {
@@ -28,12 +30,15 @@ const FeedWrapper: React.FC<FeedWrapperProps> = ({session}) => {
     // on mobile devices show nothing if no convo but always show for desktop
       display={{base: conversationId ? 'flex' : 'none', md: 'flex'}}
       width='100%'
+      border='1px solid'
+      overflow='hidden'
       direction='column'
       bg={useColorModeValue('teal.50', 'whiteAlpha.50')}
 
       >
 
     {conversationId && typeof conversationId === 'string' ? (
+      <>
       <Flex
       direction="column"
       justify="space-between"
@@ -45,10 +50,12 @@ const FeedWrapper: React.FC<FeedWrapperProps> = ({session}) => {
         >
         {/* {conversationId} */}
         <MessagesHeader userId={userId} conversationId={conversationId} />
-        {/* <Messages /> */}
+        <Messages  userId={userId} conversationId={conversationId} />
         </Flex>
+        <MessagesInput session={session} conversationId={conversationId}/>
+        </>
     ) : (
-      <Center>
+      <Center overflow="hidden">
         <h1>Currently no conversations selected</h1>
       </Center>
     )}

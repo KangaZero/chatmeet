@@ -77,13 +77,13 @@ const Navbar: React.FC<NavbarProps> = () => {
                     cursor={"pointer"}
                     minW={0}
                   >
-                    <Avatar size={"sm"} src={session?.user?.image} />
+                    <Avatar size={"sm"} src={session?.user?.image || ''} />
                   </MenuButton>
                       
                   <MenuList alignItems={"center"} bg={useColorModeValue("teal.50", "whiteAlpha.50")}>
                     <br />
                     <Center>
-                      <Avatar borderRadius='30px' size={"2xl"} src={session?.user?.image} />
+                      <Avatar borderRadius='30px' size={"2xl"} src={session?.user?.image || ''} />
                     </Center>
                     <br />
                     <Center>

@@ -1,32 +1,24 @@
-import gql from "graphql-tag";
+// import { gql } from "apollo-server-core";
+// import { User } from "@prisma/client";
 
-const typeDefs = gql`
-  type User {
-    id: String
-    name: String
-    username: String
-    email: String
-    emailVerified: Boolean
-    image: String
-  }
+// const typeDefs = gql`
+//  type Query {
+//      searchUsers(username: String): [SearchedUser]
+//   }
 
-  type SearchedUser {
-    id: String
-    username: String
-  }
+//   type Mutation {
+//     createUsername(username: String): CreateUsernameResponse
+//   }
 
-  type Query {
-    searchUsers(username: String): [SearchedUser]
-  }
+//  type SearchedUser {
+//     id: String
+//     username: String
+//   }
+//   type CreateUsernameResponse {
+//     success: Boolean
+//     error: String
+//   }
+// `;
 
-  type Mutation {
-    createUsername(username: String): CreateUsernameResponse
-  }
+// export default typeDefs;
 
-  type CreateUsernameResponse {
-    success: Boolean
-    error: String
-  }
-`;
-
-export default typeDefs;

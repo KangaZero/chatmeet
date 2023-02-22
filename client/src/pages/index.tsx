@@ -13,7 +13,7 @@ const Home: NextPage = () => {
 
   const { data : session } = useSession();
 
-  console.log('daataa', session?.user);
+  // console.log('daataa', session?.user);
 
   const reloadSession = () => {
     const event = new Event('visibilitychange');

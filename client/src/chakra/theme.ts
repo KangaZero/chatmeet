@@ -71,6 +71,7 @@ const theme = extendTheme(
     styles: {
         global: () => ({
             body: {
+              // eslint-disable-next-line react-hooks/rules-of-hooks
               bg: useColorModeValue('cyan.100', 'blackAlpha.800')
             },
         }),

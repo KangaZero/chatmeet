@@ -1,34 +1,19 @@
+
 import { useQuery } from "@apollo/client";
 import { Button, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React from "react";
+import React, {FC} from "react";
+import { Participant } from "../../../../../../backend/src/util/types";
 import ConversationOperations from "../../../../graphql/operations/conversation";
 import { formatUsernames } from "../../../../util/function";
 import { ConversationsData } from "../../../../util/types";
 // import SkeletonLoader from "../../../common/SkeletonLoader";
-
-interface MessagesHeaderProps {
+export interface MessagesHeaderProps {
   userId: string;
   conversationId: string;
 }
 
-const MessagesHeader: React.FC<MessagesHeaderProps> = ({
-  userId,
-  conversationId,
-}) => {
-  const router = useRouter();
-  const { data, loading } = useQuery<ConversationsData, null>(
-    ConversationOperations.Queries.conversations
-  );
-
-  const conversation = data?.conversations.find(
-    (conversation) => conversation.id === conversationId
-  );
-
-  if (data?.conversations && !loading && !conversation) {
-    router.replace(process.env.NEXT_PUBLIC_BASE_URL as string);
-  }
-
+const MessagesHeader = ({ userId, conversationId }: MessagesHeaderProps): JSX.Element | undefined | any => {
   const styles = {
     // (light, dark)
     cardBg: useColorModeValue('teal.50', 'whiteAlpha.50'),
@@ -45,7 +30,31 @@ const MessagesHeader: React.FC<MessagesHeaderProps> = ({
     googleButtonHoverBg:{bg:useColorModeValue('blue.500','blue.800')},
     facebookButtonBg: useColorModeValue('gray.300', 'gray.600'),
     facebookButtonHoverBg:{bg:useColorModeValue('gray.500','gray.800')}
-} 
+};
+ 
+  const router = useRouter();
+  const { data, loading } = useQuery<ConversationsData, any>(
+    ConversationOperations.Queries.conversations
+  );
+
+  const conversation = data?.conversations.find(
+    (conversation) => conversation.id === conversationId
+  );
+
+  if (data?.conversations && !loading && !conversation) {
+    router.replace(process.env.NEXT_PUBLIC_BASE_URL as string);
+    // return null;
+  }
+
+  if (conversation && conversation.participants) {
+    const participants: Participant[] = conversation.participants.map(p => ({
+      id: p.user.id,
+      username: p.user.username,
+    }));
+    // console.log('participants: ', participants)
+    const usernames = formatUsernames(participants, userId);
+
+  
 
   return (
     <Stack
@@ -73,11 +82,14 @@ const MessagesHeader: React.FC<MessagesHeaderProps> = ({
         <Stack direction="row">
           <Text color={styles.text}>To: </Text>
           <Text fontWeight={600}>
-            {formatUsernames(conversation.participants, userId)}
+            {/* {formatUsernames(conversation.participants , userId)} */}
+            {usernames}
           </Text>
         </Stack>
       )}
     </Stack>
   );
 };
+}
+
 export default MessagesHeader;

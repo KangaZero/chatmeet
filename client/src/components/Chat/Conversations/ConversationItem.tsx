@@ -20,7 +20,7 @@ import { Conversation } from "../../../../../backend/src/util/types"
 
 
 type ConversationItemProps = {
-    conversation: Conversation
+  conversation: Conversation
   userId: string;
   onClick: () => void;
   isSelected: boolean;
@@ -82,10 +82,17 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
 
   const [menuOpen, setMenuOpen] = useState(false);
 
-  console.log('conversationITME', conversation)
+  // console.log('conversationITME', conversation)
 
   const conversationUpdatedAt = conversation.updatedAt
-  console.log(conversationUpdatedAt)
+  // console.log('converssationUpdatedAt', conversationUpdatedAt)
+
+  const participants: any = conversation.participants.map(p => ({
+    id: p.user?.id,
+    username: p.user?.username,
+  }));
+  const usernames = formatUsernames(participants, userId);
+
 
   const handleClick = (event: React.MouseEvent) => {
     if (event.type === "click") {
@@ -158,7 +165,7 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
             overflow="hidden"
             textOverflow="ellipsis"
           >
-            {formatUsernames(conversation.participants, userId)}
+            {usernames}
           </Text>
           {conversation.latestMessage && (
             <Box width="140%">

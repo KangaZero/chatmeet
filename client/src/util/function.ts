@@ -1,4 +1,5 @@
 import { Participant } from '../../../backend/src/util/types';
+// import { randomBytes } from 'crypto';
 
 
 interface DateTimeFormatPartTypesRegistry {
@@ -16,9 +17,10 @@ export const formatUsernames = (
     myUserId: string
 ): string => {
     const usernames = participants
-        .filter((participant) => participant.user.id !== myUserId)
-        .map((participant) => participant.user.username);
+        .filter((participant) => participant.id !== myUserId)
+        .map((participant) => participant.username);
 
+        // console.log(usernames, 'formatUsername')
         return usernames.join(", ");
 }
 export const formatDate = (dateString: string): string => {
@@ -49,3 +51,21 @@ export const formatDate = (dateString: string): string => {
     return formattedDate;
   }
   
+
+  // export class CustomObjectID {
+  //   private timestamp: string;
+  //   private machineId: string;
+  //   private processId: string;
+  //   private counter: string;
+  
+  //   constructor() {
+  //     this.timestamp = Math.floor(Date.now() / 1000).toString(16);
+  //     this.machineId = randomBytes(3).toString('hex');
+  //     this.processId = Math.floor(window.performance.now()).toString(16).substring(-4)
+  //     this.counter = randomBytes(3).toString('hex');
+  //   }
+  
+  //   public toHexString(): string {
+  //     return this.timestamp + this.machineId + this.processId + this.counter;
+  //   }
+  // }

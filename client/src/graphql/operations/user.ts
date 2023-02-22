@@ -1,24 +1,26 @@
-import { gql, useQuery } from '@apollo/client';
+/* eslint-disable import/no-anonymous-default-export */
+import { gql, useQuery } from "@apollo/client";
 
 export default {
-    Queries:{
-        searchUsers: gql`
-        query SearchUsers($username: String!) {
-            searchUsers(username: $username) {
-                id
-                username
-            }
-        }`
-    },
-    Mutations:{
-        createUsername: gql`
-            mutation CreateUserName($username: String!) {
-                createUsername(username: $username) {
-                    success
-                    error
-                }
-            }
-        `
-    },
-    Subscriptions: {},
-}
+  Queries: {
+    searchUsers: gql`
+      query SearchUsers($username: String!) {
+        searchUsers(username: $username) {
+          id
+          username
+        }
+      }
+    `,
+  },
+  Mutations: {
+    createUsername: gql`
+      mutation CreateUserName($username: String!) {
+        createUsername(username: $username) {
+          success
+          error
+        }
+      }
+    `,
+  },
+  Subscriptions: {},
+};
