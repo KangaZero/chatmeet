@@ -84,7 +84,6 @@ const Messages: React.FC<MessagesProps> = ({ userId, conversationId }): any => {
         <Flex direction="column-reverse" overflow="auto" height="100%">
           {data.messages.map((message) => (
             <Stack
-              border="1px solid black"
               key={message.id}
               direction={message.senderId === userId ? "row-reverse" : "row"}
             >

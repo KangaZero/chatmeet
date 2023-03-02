@@ -23,7 +23,7 @@ export const formatUsernames = (
         // console.log(usernames, 'formatUsername')
         return usernames.join(", ");
 }
-export const formatDate = (dateString: string): string => {
+export const formatDate = (dateString: string | Date): string => {
     const date = new Date(dateString);
     const options: DateTimeFormatPartTypesRegistry= { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
     let formattedDate = new Intl.DateTimeFormat('en-AU', options).format(date);
